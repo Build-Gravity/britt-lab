@@ -72,7 +72,8 @@ Choose experimental architecture, implement it ourselves, and ensure all documen
       • Source = `main` branch  
       • Folder = `/root` (or `/docs` if you move files there)
   3. Save – GitHub builds the page and gives you a URL like `https://<username>.github.io/<repo>/`.
-  4. Visit the URL – you should see an alert asking for your first R/P/S choice. That means the basics are working. Visual dashboards can be added later.
+  4. Visit the URL – you'll see a landing page with project options. Click "Launch Web Experiment" to navigate to your Option A implementation.
+  5. You should see Rock/Paper/Scissors buttons that log to console. That means the basics are working. Visual dashboards can be added later.
 
 - **Documentation Needs:**
   - PsychoPy.js complete API documentation 
