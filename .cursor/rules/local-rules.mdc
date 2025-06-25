@@ -4,3 +4,5 @@ globs:
 alwaysApply: true
 ---
 Use TDD (unit tests) when implementing any new feature or code
+
+Development of the meta-project (the course we're designing) lives in 

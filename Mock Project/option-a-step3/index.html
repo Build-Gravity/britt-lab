@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 3: Basic Deployment - Psychology Experiment</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Step 3: Basic Deployment</h1>
+        <p class="subtitle">Console Logging & Verification</p>
+        
+        <div class="info-section">
+            <h3>🎯 Goal: Verify Your Setup Works</h3>
+            <p>Click any button below to test the basic logging functionality. Open your browser's developer console (F12) to see the logged data.</p>
+            <p><strong>Next Steps:</strong> Step 4 will add GitHub REST API integration, Step 5 will add full experiment logic.</p>
+        </div>
+
+        <div class="experiment-section">
+            <h3>Rock Paper Scissors - Basic Test</h3>
+            <p>Choose your move to test logging:</p>
+            
+            <div class="choice-buttons">
+                <button class="choice-btn" onclick="logChoice('Rock')">🪨 Rock</button>
+                <button class="choice-btn" onclick="logChoice('Paper')">📄 Paper</button>
+                <button class="choice-btn" onclick="logChoice('Scissors')">✂️ Scissors</button>
+            </div>
+            
+            <div id="status">Ready - Click a button to test console logging</div>
+        </div>
+
+        <div class="info-section">
+            <h4>Step 3 Verification Checklist:</h4>
+            <ol>
+                <li>✅ GitHub Pages deployed successfully (you're seeing this page)</li>
+                <li>🔍 Open browser developer tools (F12 → Console tab)</li>
+                <li>🖱️ Click any choice button above</li>
+                <li>📊 Verify structured data appears in console</li>
+                <li>🔄 Try clicking multiple buttons to see data accumulation</li>
+            </ol>
+            <p><strong>Once this works</strong>, you're ready for <a href="../option-a-step4/">Step 4: Data Collection</a></p>
+        </div>
+
+        <div class="info-section">
+            <h4>What's Working Here:</h4>
+            <ul>
+                <li><strong>Browser Interaction:</strong> Buttons respond to clicks</li>
+                <li><strong>Data Structure:</strong> Each click creates a structured data entry</li>
+                <li><strong>Console Logging:</strong> Verifies data capture is working</li>
+                <li><strong>GitHub Pages:</strong> Your experiment runs on the web</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="experiments/exp_rps_updating/rps.js"></script>
+</body>
+</html> 

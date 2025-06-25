@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 4: Data Collection - Psychology Experiment</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Step 4: Data Collection</h1>
+        <p class="subtitle">GitHub REST API Integration</p>
+        
+        <div class="info-section">
+            <h3>🎯 Goal: Automated Data Saving</h3>
+            <p>Your experiment results now automatically save back to your GitHub repository. Each interaction creates a data file that you can analyze later.</p>
+            <p><strong>What's New:</strong> GitHub REST API integration, automatic file creation, persistent data storage</p>
+        </div>
+
+        <div class="setup-section">
+            <h3>⚙️ Setup Required</h3>
+            <div class="setup-form">
+                <label for="github-token">GitHub Personal Access Token:</label>
+                <input type="password" id="github-token" placeholder="ghp_..." style="width: 300px;">
+                
+                <label for="repo-owner">Repository Owner:</label>
+                <input type="text" id="repo-owner" placeholder="your-username" style="width: 200px;">
+                
+                <label for="repo-name">Repository Name:</label>
+                <input type="text" id="repo-name" placeholder="your-repo-name" style="width: 200px;">
+                
+                <button onclick="configureAPI()" class="config-btn">Configure & Test</button>
+            </div>
+            <div id="config-status" class="status-message"></div>
+        </div>
+
+        <div class="experiment-section">
+            <h3>Rock Paper Scissors - With Data Collection</h3>
+            <p>Choose your move (data will save to GitHub):</p>
+            
+            <div class="choice-buttons">
+                <button class="choice-btn" onclick="makeChoice('Rock')" disabled id="rock-btn">🪨 Rock</button>
+                <button class="choice-btn" onclick="makeChoice('Paper')" disabled id="paper-btn">📄 Paper</button>
+                <button class="choice-btn" onclick="makeChoice('Scissors')" disabled id="scissors-btn">✂️ Scissors</button>
+            </div>
+            
+            <div id="status">Configure GitHub API above to enable experiment</div>
+            <div id="data-log"></div>
+        </div>
+
+        <div class="info-section">
+            <h4>Step 4 Features:</h4>
+            <ul>
+                <li><strong>GitHub API Integration:</strong> Automatic data file creation in your repository</li>
+                <li><strong>Persistent Storage:</strong> All experiment data saved permanently</li>
+                <li><strong>JSON Format:</strong> Structured data ready for analysis</li>
+                <li><strong>Real-time Feedback:</strong> See exactly what data is being saved</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h4>Getting Your GitHub Token:</h4>
+            <ol>
+                <li>Go to GitHub → Settings → Developer settings → Personal access tokens</li>
+                <li>Generate new token (classic)</li>
+                <li>Select 'repo' scope for repository access</li>
+                <li>Copy the token and paste it above</li>
+            </ol>
+            <p><strong>Note:</strong> Token stays in your browser, never sent to external servers</p>
+        </div>
+    </div>
+
+    <script src="experiments/exp_rps_updating/github-api.js"></script>
+    <script src="experiments/exp_rps_updating/rps-step4.js"></script>
+</body>
+</html> 

@@ -1,16 +1,16 @@
-# Psychology Experiment Development Instructions
+# Build Your Own Psychology Experiment
 
 ## Overview
-Step-by-step methodology for creating an engaging psychology experiment targeting Dr. Britt Anderson's interests. Designed for non-technical psychology students in university tech courses with ambitious research goals.
+Learn to code by building psychology experiments. This guide walks you through creating interactive experiments that run in web browsers, collect real data, and help answer questions about how minds work.
 
 **Approach:** We'll implement each option ourselves as we document, ensuring Cursor has complete context and working examples.
 
 ---
 
-## Step 1: Research Target Interests 
+## Step 1: Find Your Research Inspiration
 
 ### Goal
-Understand Dr. Britt Anderson's research interests, methodological preferences, and current work to design an experiment that genuinely aligns with his academic focus.
+Find research that interests you and understand what makes experiments effective. Look at how computational methods can help answer psychology questions.
 
 ### 1.1 Research Approaches
 Conduct thorough background research using multiple approaches:
@@ -22,19 +22,17 @@ Conduct thorough background research using multiple approaches:
 **Additional Research Sources:**
 - Academic databases (Google Scholar, PsycINFO)
 - University of Waterloo faculty pages and recent course syllabi  
-- Recent conference presentations or keynotes
 - Collaborative research networks and lab websites
-- Social media/academic Twitter for current interests and opinions
 
 **Research Goals:**
-Focus on understanding his methodological preferences and theoretical positions to guide both experiment design and architecture choice.
+Look for experiments that seem particularly clever or insightful, and figure out what makes them effective.
 
 ### 1.2 Research Analysis
 After running the Gemini prompt, analyze the results to identify:
 - **Primary research themes** that could inspire experiment topics
 - **Methodological preferences** that should guide your architecture choice
 - **Theoretical gaps** that present opportunities for novel contributions
-- **Complexity level** that matches his expectations
+- **Complexity level** appropriate for your audience
 
 ### 1.3 Documentation
 **Document your research findings:**
@@ -43,37 +41,33 @@ After running the Gemini prompt, analyze the results to identify:
 - Reference your research file in future discussions using the @ symbol
 
 **Key Questions to Answer:**
-- What methodological approaches does Dr. Anderson prefer?
-- Which research themes align with current psychology trends?
-- What gaps exist that your experiment could address?
-- How complex should your implementation be to match his expectations?
+- What methodological approaches seem most effective?
+- Which research questions could benefit from computational tools?
+- What would make your experiment both interesting and feasible?
+- How can you balance ambition with practical constraints?
 
-## Step 2: Architecture & Documentation Setup 🔄
+## Step 2: Choose Your Tech Stack 🔄
 
 ### Goal
-Choose experimental architecture, implement it ourselves, and ensure all documentation/libraries are accessible to Cursor.
+Choose the right tools for your project. Set up everything you need to build, deploy, and share your experiment.
 
 ### Architecture Options (with Implementation)
 
-#### **Option A: GitHub Pages Psychology Experiment**
-- **Stack:** HTML/CSS/JavaScript frontend + PsychoPy.js + GitHub REST API
-- **Deployment:** GitHub Pages (automatic hosting)
-- **Data Storage:** GitHub REST API to store results back to repo as JSON/CSV
-- **Visualization:** PsychoPy.js for experiments + Chart.js for results
-- **Implementation Plan:**
-  - Create experiment using PsychoPy.js (web-compatible)
-  - Deploy to GitHub Pages for universal access
-  - Use [GitHub REST API](https://docs.github.com/en/rest?apiVersion=2022-11-28) to POST experiment data back to repo
-  - Real-time results dashboard pulling from repo data
+#### **Option A: Web Experiments (GitHub Pages)**
+- **What you get:** Experiments that run in any browser
+- **Tech:** HTML/CSS/JavaScript + GitHub Pages hosting
+- **Advantages:** No installation required, easy to share via link
+- **Data collection:** Results automatically save to your GitHub repository
+- **Best for:** Online experiments, easy participant recruitment, broad accessibility
   
   **Quick GitHub Pages How-To (First Run)**
-  1. Push your `option-a-github-pages` folder to the `main` branch (keep the default structure).
+  1. Push your repository to the `main` branch (keep the default structure).
   2. In **Repo → Settings → Pages**, set:
       • Source = `main` branch  
       • Folder = `/root` (or `/docs` if you move files there)
   3. Save – GitHub builds the page and gives you a URL like `https://<username>.github.io/<repo>/`.
-  4. Visit the URL – you'll see a landing page with project options. Click "Launch Web Experiment" to navigate to your Option A implementation.
-  5. You should see Rock/Paper/Scissors buttons that log to console. That means the basics are working. Visual dashboards can be added later.
+  4. Visit the URL – you'll see a landing page with step-by-step options.
+  5. Start with Step 3 to verify basic deployment works, then progress through the steps.
 
 - **Documentation Needs:**
   - PsychoPy.js complete API documentation 
@@ -82,22 +76,12 @@ Choose experimental architecture, implement it ourselves, and ensure all documen
   - Example experiment templates with data collection
 - **Bold Factor:** Zero-installation experiments with automated data collection to GitHub
 
-#### **Option B: Jupyter + PsychoPy Research Environment**
-- **Stack:** Jupyter Lab + Python (PsychoPy, pandas, matplotlib, seaborn)
-- **Deployment:** Local/cloud Jupyter server
-- **Data Storage:** Local files + GitHub integration for sharing
-- **Visualization:** PsychoPy for experiments + publication-ready analysis plots
-- **Implementation Plan:**
-  - Create PsychoPy experiment scripts
-  - Jupyter notebooks for data analysis and visualization
-  - Templates for common psychology paradigms
-  - Integration with GitHub for version control and sharing
-- **Documentation Needs:**
-  - Complete PsychoPy Python API documentation
-  - Jupyter Lab setup and extension guides
-  - Statistical analysis templates for psychology
-  - GitHub integration workflows
-- **Bold Factor:** Professional-grade analysis pipelines with publication-ready outputs
+#### **Option B: Research Environment (Jupyter + Python)**
+- **What you get:** Complete research workflow in one place
+- **Tech:** Python + Jupyter notebooks + statistical libraries
+- **Advantages:** Publication-ready graphs, advanced statistical analysis
+- **Data collection:** Local files with comprehensive analysis capabilities
+- **Best for:** In-depth analysis, learning Python, building research skills
 
 ### Cursor Documentation Strategy
 **For each option, we'll create:**
@@ -113,68 +97,66 @@ Choose experimental architecture, implement it ourselves, and ensure all documen
 - Both will use **PsychoPy** as the core experiment library
 
 ### Next Steps
-1. Fork or clone this repository to your own GitHub account/computer.
-2. Decide which architecture template you want to try first.
-   - **Option A:** Enable GitHub Pages (see quick guide above) and visit the published URL to ensure the basic prompt appears. (Skip visualisation for now.)
-   - **Option B:** Launch JupyterLab, open `option-b-jupyter/starter.ipynb`, and run the cells to generate a basic dataset and plot.
-3. Commit and push your first working demo (even if unchanged) so you have a restore point.
-4. Tweak task parameters (probabilities, trial counts, learning rates) and rerun; visualise the effect in the provided analysis notebook or dashboard.
-5. Document what you changed (and what happened) in a short `YOURNAME_notes.md` file inside your experiment folder and push the update.
+1. **Fork this repository** to your own GitHub account
+2. **Enable GitHub Pages** (see quick guide above) to deploy your experiments
+3. **Start with Step 3** - Navigate to `Mock Project/option-a-step3/` to verify basic deployment
+4. **Progress to Step 4** - Add automated data collection with GitHub API integration
+5. **Experiment and modify** - Tweak parameters and document your changes
 
 ---
 
-## Our Experiment Design Goals 🎯
+## What Makes a Great Experiment 🎯
 
-### Long-Term Vision
-When fully implemented, your experiment should achieve these theoretical and practical goals:
+### Your End Goal
+Create experiments that generate meaningful insights about how minds work.
 
-#### **Theoretical Goals**
-1. **Target a Specific Cognitive Mechanism** - Focus on one clear process identified in your research (e.g., probability learning, belief updating, attention vs. statistical learning)
-2. **Generate Mechanistic Hypotheses** - Move beyond vague labels to testable predictions about *how* the mind works
-3. **Enable Model Comparison** - Collect data rich enough to distinguish between competing computational accounts
+#### **What You're Aiming For**
+1. **Focus on a Specific Question** - Choose something concrete and testable (like "Do people learn patterns without awareness?")
+2. **Make Clear Predictions** - Develop testable hypotheses rather than vague ideas
+3. **Collect Meaningful Data** - Gather enough information to compare different explanations
 
-#### **Experimental Design Framework**
-1. **Define the Paradigm**  
-   • What is the task? What are participants asked to do every trial?  
-   • Which independent variables will you manipulate? (probability bias, feedback type, etc.)  
-   • What dependent variables will you record? (accuracy, RT, confidence, choice patterns)
-2. **Sketch the Timeline**  
-   • Practice block → main blocks → debrief  
-   • Roughly 5–10 min per participant keeps things manageable
-3. **Plan Data Structure**  
-   • At minimum: trial number, IV levels, participant response, RT  
-   • Consider: confidence ratings, strategy reports, demographic info
-4. **Design Analysis Pipeline**  
-   • One meaningful plot (e.g., learning curve, error distribution)  
-   • Statistical tests that directly address your theoretical question
-   • Computational model fits (even simple ones)
+#### **How to Design Your Experiment**
+1. **Create the Task**  
+   • What do people actually *do* in your experiment?  
+   • What will you change between conditions?  
+   • What will you measure? (reaction time, accuracy, choices, confidence)
+2. **Keep It Manageable**  
+   • 5-10 minutes max - people get bored!  
+   • Practice trials → main experiment → quick debrief
+3. **Plan Your Data**  
+   • Basic stuff: trial number, what you manipulated, what they did, how long it took  
+   • Bonus points: confidence ratings, strategy questions, follow-up interviews
+4. **Think About Analysis**  
+   • What graph would show your main result?  
+   • What statistical test would convince a skeptic?
+   • Can you fit a simple model to the data?
 
-#### **Implementation Standards**
-- **Modular Code** - Keep stimulus parameters in config files for easy tweaking
-- **Clear Documentation** - READMEs that explain the paradigm and key parameters
-- **Reproducible** - Others can run your exact experiment and analysis
-- **Extensible** - Easy to add conditions, change parameters, or adapt for new questions
+#### **Code Like a Pro**
+- **Make it tweakable** - Put all your settings in config files so you can easily change things
+- **Document everything** - Future you will thank present you
+- **Make it shareable** - Others should be able to run your code and get the same results
+- **Build for expansion** - Make it easy to add new conditions or adapt for different questions
 
 ---
 
-## Step 3: Basic Deployment & Console Logging ⚙️
+## Step 3: Get Something Working ⚙️
 
 ### Goal
-Get your chosen architecture working end-to-end with minimal functionality:
-1. Deploy successfully to GitHub Pages (Option A) or run locally (Option B)
-2. Verify basic user interaction and data logging works
-3. Establish the foundation for adding full experiment logic later
+Get your first experiment working. Start simple and build up:
+1. Deploy your code successfully (web or local)
+2. Verify that user interactions work and log data
+3. Establish the foundation for more complex features
 
 ### Practical Tasks for Step 3
 
 #### **Option A: GitHub Pages Deployment**
 1. **Enable GitHub Pages**
-   - Push your `option-a-github-pages` folder to `main` branch
+   - Push your `option-a-step3` folder to `main` branch
    - Repo Settings → Pages → Source: `main` branch, folder: `/root`
    - Note your GitHub Pages URL (e.g., `https://username.github.io/repo-name/`)
 
 2. **Test Basic Functionality**
-   - Visit your GitHub Pages URL
+   - Visit your GitHub Pages URL → Navigate to `Mock Project/option-a-step3/`
    - Open browser developer tools (F12 → Console)
    - Click the Rock/Paper/Scissors buttons
    - Verify structured data logs to console
@@ -182,12 +164,12 @@ Get your chosen architecture working end-to-end with minimal functionality:
 
 3. **Verify File Structure**
    ```
-   option-a-github-pages/
+   option-a-step3/
    ├── index.html (main page with buttons)
    ├── styles.css (extracted styling)
    └── experiments/exp_rps_updating/
-       ├── rps.js (minimal logging function)
-       └── config.js (for future parameters)
+       ├── rps.js (console logging function)
+       └── config.js (basic parameters)
    ```
 
 #### **Option B: Local Jupyter Setup**
@@ -209,10 +191,77 @@ We provide **exp_rps_updating** as a minimal working example:
 ### Deliverables for Step 3
 - **Working deployment** (GitHub Pages live URL or local Jupyter environment)
 - **Verified logging** (console output shows structured data)
-- **Clean file organization** (CSS extracted, clear folder structure)  
+- **Clean file organization** (CSS extracted, clear folder structure)
 
-## Step 4: Data Collection & Analysis Implementation
-*[GitHub REST API integration OR local analysis pipeline]*
+---
+
+## Step 4: Data Collection & Analysis Implementation 📊
+
+### Goal
+Transform your experiment from a testing prototype into a data-collecting research tool. Add automated data saving so every participant interaction creates permanent, analyzable records.
+
+### Practical Tasks for Step 4
+
+#### **Option A: GitHub REST API Integration**
+1. **Setup GitHub Personal Access Token**
+   - Go to GitHub → Settings → Developer Settings → Personal Access Tokens
+   - Generate new token (classic) with 'repo' scope
+   - Copy token for use in experiment configuration
+
+2. **Configure Data Collection**
+   - Navigate to `Mock Project/option-a-step4/`
+   - Enter your GitHub token, username, and repository name
+   - Test connection to verify API access
+
+3. **Test Automated Data Saving**
+   - Click experiment choices to generate data
+   - Verify files appear in your repository's `data/` folder
+   - Check that each session creates unique, timestamped files
+
+4. **File Structure for Step 4**
+   ```
+   option-a-step4/
+   ├── index.html (setup form + experiment interface)
+   ├── styles.css (enhanced styling with forms)
+   └── experiments/exp_rps_updating/
+       ├── github-api.js (GitHub REST API integration)
+       ├── rps-step4.js (main experiment with data saving)
+       └── config.js (API configuration)
+   ```
+
+#### **What's New in Step 4**
+- **GitHub API Integration**: Automatic file creation in your repository
+- **Structured Data Format**: JSON files ready for analysis
+- **Session Management**: Unique identifiers for each participant
+- **Real-time Feedback**: Visual confirmation of successful data saves
+- **Error Handling**: Graceful fallbacks when network issues occur
+
+#### **Sample Data Output**
+Each experiment session creates a JSON file like:
+```json
+{
+  "metadata": {
+    "step": 4,
+    "experiment": "Rock-Paper-Scissors Data Collection",
+    "sessionId": "session_2024-01-15T10-30-45_abc123",
+    "startTime": "2024-01-15T10:30:45.123Z",
+    "participantId": "participant_1705312245123"
+  },
+  "trials": [
+    {
+      "trial": 1,
+      "timestamp": "2024-01-15T10:30:47.456Z",
+      "playerChoice": "Rock",
+      "reactionTime": null,
+      "metadata": {
+        "userAgent": "Mozilla/5.0...",
+        "screenSize": "1920x1080",
+        "viewportSize": "1200x800"
+      }
+    }
+  ]
+}
+```
 
 ## Step 5: Testing & Documentation Finalization
 *[Complete working examples with full documentation]*
@@ -225,6 +274,6 @@ When building and documenting experiments *with Cursor* keep these high-level pr
 2. **Scaffolded Code:** Start from the smallest runnable example, then iteratively add complexity. Make the parameters (probabilities, learning rates, trial counts) easy to tweak.
 3. **Notebook-Centred Analysis:** Perform all stats and plotting inside Jupyter notebooks so the code, results, and narrative stay together.
 4. **GitHub-First Workflow:** Commit early and often, deploy demos via GitHub Pages when possible, and (if web-based) POST data back to the repo using the GitHub REST API. This keeps everything transparent and reproducible.
-5. **Theory Link:** Every README should state *which cognitive mechanism* the task targets and, ideally, reference a simple computational model. This mirrors Dr. Anderson's emphasis on mechanistic clarity.
+5. **Theory Link:** Every README should state *which cognitive mechanism* the task targets and, ideally, reference a simple computational model. This keeps the focus on mechanistic clarity.
 
 Cursor will maintain context across these files, so reference assets with the `@` symbol (e.g., @Deep Research/gemini-dr-anderson-research.md) and keep instructions succinct.
