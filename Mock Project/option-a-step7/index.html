@@ -1,0 +1,460 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 7: Analysis & Visualization - Psychology Experiment</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+        window.currentStep = 7;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Step 7: Analysis & Visualization</h1>
+        <p class="subtitle">Analyze psychological data and create research-quality visualizations</p>
+        
+        <div id="progress-container"></div>
+        
+        <div class="info-section">
+            <h3>🎯 Goal: Complete Research Analysis Workflow</h3>
+            <p>This step teaches you to analyze psychology experiment data like a researcher. You'll learn to process raw data, test hypotheses, create visualizations, and interpret results in psychology research context.</p>
+             <p><strong>What You'll Learn:</strong></p>
+            <ul>
+                <li><strong>Data Processing</strong>: Load, clean, and aggregate experimental data from multiple participants</li>
+                <li><strong>Statistical Analysis</strong>: Conduct hypothesis tests, effect sizes, and model fitting</li>
+                <li><strong>Research Visualization</strong>: Create publication-ready plots and graphs</li>
+                <li><strong>Psychology Interpretation</strong>: Connect statistical results to psychological theories</li>
+            </ul>
+        </div>
+
+        <div class="step-section">
+            <h3>🤖 AI-Assisted Data Analysis</h3>
+            <p>Use AI to help analyze your experiment data using psychology research standards:</p>
+            
+            <div class="step-box">
+                <h4>🧠 Cursor Prompts for Psychology Data Analysis</h4>
+                <div class="code-block">
+                    <code>I have experimental data from my psychology study (from Step 0): [YOUR STUDY DESCRIPTION].
+
+My data includes: [DESCRIBE YOUR DATA STRUCTURE]
+My key variables are: [DEPENDENT AND INDEPENDENT VARIABLES]
+My research hypothesis was: [YOUR HYPOTHESIS]
+
+Help me with:
+1. Appropriate statistical tests for my design and data type
+2. Effect size calculations and power analysis
+3. Data visualization that shows my key findings
+4. Interpretation of results in psychology research context
+5. Potential limitations and future directions
+
+My research question focuses on [SPECIFIC PSYCHOLOGY DOMAIN].</code>
+                </div>
+                <button onclick="copyAnalysisPrompt()" class="primary-btn">📋 Copy Analysis Prompt</button>
+            </div>
+
+            <div class="step-box">
+                <h4>📊 Specific Analysis Type Prompts</h4>
+                <p><strong>For Learning/Performance Data:</strong></p>
+                <div class="code-block">
+                    <code>Analyze learning curves and performance changes over time. Include trend analysis, plateau detection, and individual differences in learning rates.</code>
+                </div>
+                
+                <p><strong>For Decision-Making Data:</strong></p>
+                <div class="code-block">
+                    <code>Analyze choice patterns, strategy changes, and decision-making under uncertainty. Include choice probability models and strategy classification.</code>
+                </div>
+                
+                <p><strong>For Reaction Time Data:</strong></p>
+                <div class="code-block">
+                    <code>Analyze response times with appropriate outlier handling, condition comparisons, and speed-accuracy tradeoffs.</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🔧 Build Your Own: Analysis Pipeline</h3>
+            <p>Create a complete analysis workflow for your Step 0 experiment:</p>
+            
+            <div class="step-box">
+                <h4>📝 Analysis Workflow Template</h4>
+                <p>Step-by-step analysis process for psychology experiments:</p>
+                <div class="code-block">
+                    <code>// 1. Data Loading and Validation
+function loadExperimentData(dataFiles) {
+    const allData = [];
+    for (const file of dataFiles) {
+        const participantData = JSON.parse(file);
+        if (validateDataStructure(participantData)) {
+            allData.push(participantData);
+        }
+    }
+    return allData;
+}
+
+// 2. Data Preprocessing
+function preprocessData(rawData) {
+    return rawData.map(participant => ({
+        participantId: participant.id,
+        trials: participant.trials.filter(trial => 
+            trial.reactionTime > 200 && trial.reactionTime < 5000
+        ),
+        accuracy: calculateAccuracy(participant.trials),
+        meanRT: calculateMeanRT(participant.trials)
+    }));
+}
+
+// 3. Statistical Analysis
+function runStatisticalTests(processedData) {
+    const results = {
+        descriptiveStats: calculateDescriptives(processedData),
+        tTest: runTTest(processedData),
+        effectSize: calculateCohensd(processedData),
+        confidenceInterval: calculateCI(processedData)
+    };
+    return results;
+}</code>
+                </div>
+                <button onclick="copyAnalysisTemplate()" class="secondary-btn">📋 Copy Analysis Template</button>
+            </div>
+
+            <div class="step-box">
+                <h4>📈 Visualization Patterns</h4>
+                <div class="code-block">
+                    <code>// Common psychology experiment visualizations
+function createLearningCurve(data) {
+    // Plot performance over trials/blocks
+    const ctx = document.getElementById('learningChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.blocks,
+            datasets: [{
+                label: 'Accuracy',
+                data: data.accuracy,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true, max: 1 }
+            }
+        }
+    });
+}
+
+function createReactionTimeDistribution(data) {
+    // Histogram of reaction times
+    const bins = createBins(data.reactionTimes, 20);
+    // ... histogram implementation
+}</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>🤖 Cursor Implementation Prompt</h4>
+                <div class="code-block">
+                    <code>I need to analyze data from my psychology experiment. My data structure is:
+
+[PASTE YOUR DATA STRUCTURE]
+
+Help me implement:
+1. Data loading and validation functions
+2. Preprocessing to handle outliers and data quality
+3. Statistical analysis appropriate for my design
+4. Visualizations that clearly show my key findings
+5. Summary statistics and effect size calculations
+
+My research design is [EXPERIMENTAL DESIGN] and I'm testing [SPECIFIC HYPOTHESIS].</code>
+                </div>
+                <button onclick="copyImplementationPrompt()" class="primary-btn">📋 Copy Implementation Prompt</button>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🎮 RPS Example: Multi-Algorithm Analysis</h3>
+            <p>Analyze data from our Rock-Paper-Scissors AI demonstration. Load data files from Step 6 to compare different algorithms:</p>
+            
+            <div class="analysis-interface">
+                <div class="file-upload-section">
+                    <h4>Load Experiment Data Files</h4>
+                    <p>Upload JSON files exported from Step 6 (multiple participants or algorithms):</p>
+                    
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">📁</div>
+                        <p>Click to select data files or drag and drop here</p>
+                        <input type="file" id="data-file-input" multiple accept=".json" style="display: none;">
+                    </div>
+                    
+                    <div id="uploaded-files" class="uploaded-files"></div>
+                    
+                    <div class="analysis-controls">
+                        <button id="load-data-btn" class="primary-btn" disabled>Load and Analyze Data</button>
+                        <button id="demo-data-btn" class="secondary-btn">Use Demo Data</button>
+                    </div>
+                </div>
+
+                <div class="analysis-results" id="analysis-results" style="display: none;">
+                    <h4>Analysis Results</h4>
+                    
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h5>Dataset Overview</h5>
+                            <div id="dataset-summary"></div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h5>Algorithm Comparison</h5>
+                            <div id="algorithm-comparison"></div>
+                        </div>
+                        
+                        <div class="result-card">
+                            <h5>Learning Analysis</h5>
+                            <div id="learning-analysis"></div>
+                        </div>
+                    </div>
+
+                    <div class="visualizations">
+                        <div class="chart-container">
+                            <h5>Win Rate Over Time</h5>
+                            <canvas id="winRateChart" width="400" height="200"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h5>Algorithm Performance Comparison</h5>
+                            <canvas id="algorithmChart" width="400" height="200"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h5>Learning Curve Analysis</h5>
+                            <canvas id="learningChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="statistical-results">
+                        <h5>Statistical Analysis</h5>
+                        <div id="statistical-output"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📚 Research-Grade Analysis Methods</h3>
+            <p>Advanced analysis techniques for psychology experiments:</p>
+            
+            <div class="step-box">
+                <h4>🧠 RELPH Model Analysis</h4>
+                <p>Based on Mohammadi Sepahvand et al. (2014) - analyzing reinforcement learning behavior:</p>
+                <ul>
+                    <li><strong>Value Learning:</strong> Track how action values change over time</li>
+                    <li><strong>Learning Rate Estimation:</strong> Fit individual α parameters to behavior</li>
+                    <li><strong>Strategy Classification:</strong> Identify probability matching vs. maximizing</li>
+                    <li><strong>Context Sensitivity:</strong> Analyze pattern-dependent learning</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>📊 Cognitive Modeling Approaches</h4>
+                <ul>
+                    <li><strong>Model Comparison:</strong> AIC, BIC, and Bayes factors for model selection</li>
+                    <li><strong>Parameter Recovery:</strong> Test if your model can recover known parameters</li>
+                    <li><strong>Individual Differences:</strong> Hierarchical modeling of participant variation</li>
+                    <li><strong>Predictive Validation:</strong> Cross-validation and out-of-sample prediction</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>📈 Visualization Best Practices</h4>
+                <ul>
+                    <li><strong>Error Bars:</strong> Use 95% confidence intervals for between-subjects, ±1 SEM for within-subjects</li>
+                    <li><strong>Individual Data:</strong> Show individual participants alongside group means</li>
+                    <li><strong>Effect Sizes:</strong> Report Cohen's d, eta-squared, or other standardized measures</li>
+                    <li><strong>Significance Testing:</strong> Report exact p-values and confidence intervals</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🔬 Psychology Research Applications</h3>
+            <p>How to adapt these analysis methods for different psychology domains:</p>
+            
+            <div class="step-box">
+                <h4>🎯 Decision-Making Research</h4>
+                <ul>
+                    <li><strong>Choice Probability Models:</strong> Logistic regression and softmax models</li>
+                    <li><strong>Sequential Effects:</strong> Analyze how previous trials influence current choices</li>
+                    <li><strong>Risk Analysis:</strong> Expected value vs. actual choice patterns</li>
+                    <li><strong>Strategy Evolution:</strong> Track how decision strategies change with experience</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>🧠 Learning & Memory Research</h4>
+                <ul>
+                    <li><strong>Learning Curves:</strong> Exponential, power law, and other growth models</li>
+                    <li><strong>Forgetting Functions:</strong> Decay rates and spacing effects</li>
+                    <li><strong>Transfer Analysis:</strong> How learning in one context affects another</li>
+                    <li><strong>Individual Differences:</strong> Correlations with cognitive abilities</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>⚡ Attention & Performance Research</h4>
+                <ul>
+                    <li><strong>Reaction Time Analysis:</strong> RT distributions, outlier handling, ex-Gaussian fits</li>
+                    <li><strong>Speed-Accuracy Tradeoffs:</strong> Diffusion model analysis</li>
+                    <li><strong>Vigilance Decrement:</strong> Performance changes over sustained attention</li>
+                    <li><strong>Dual-Task Costs:</strong> Interference and capacity limitations</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>✅ Step 7 Checklist</h3>
+            <div class="checklist">
+                <label><input type="checkbox" id="check-analysis-design"> <strong>Designed Analysis Plan</strong> - Used AI to plan statistical analysis for your experiment</label>
+                <label><input type="checkbox" id="check-data-processing"> <strong>Implemented Data Processing</strong> - Built functions to load, clean, and process your data</label>
+                <label><input type="checkbox" id="check-statistics"> <strong>Conducted Statistical Analysis</strong> - Performed appropriate tests and calculated effect sizes</label>
+                <label><input type="checkbox" id="check-visualizations"> <strong>Created Visualizations</strong> - Generated research-quality plots and graphs</label>
+                <label><input type="checkbox" id="check-rps-analysis"> <strong>Analyzed RPS Data</strong> - Loaded and analyzed AI algorithm demonstration data</label>
+                <label><input type="checkbox" id="check-interpretation"> <strong>Interpreted Results</strong> - Connected statistical findings to psychological theory</label>
+            </div>
+        </div>
+
+        <div class="analysis-export-section" id="analysis-export" style="display: none;">
+            <h3>📊 Export Analysis Results</h3>
+            <p>Generate a complete analysis report for your research:</p>
+            
+            <div class="export-options">
+                <div class="export-option">
+                    <h4>📈 Statistical Report</h4>
+                    <p>Comprehensive statistical analysis with tables and effect sizes</p>
+                    <button id="export-stats-btn" class="primary-btn">Export Statistical Report</button>
+                </div>
+                
+                <div class="export-option">
+                    <h4>📊 Visualization Package</h4>
+                    <p>High-resolution plots ready for publication or presentation</p>
+                    <button id="export-plots-btn" class="secondary-btn">Export Visualizations</button>
+                </div>
+                
+                <div class="export-option">
+                    <h4>📝 Research Summary</h4>
+                    <p>Complete analysis summary with interpretation and conclusions</p>
+                    <button id="export-summary-btn" class="secondary-btn">Export Research Summary</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📚 How Data Analysis Works (Code Implementation)</h3>
+            <p>Understanding the structure behind research-quality data analysis:</p>
+            
+            <div class="step-box">
+                <h4>🔄 Complete Analysis Pipeline</h4>
+                <div class="code-block">
+                    <code>// Full research analysis workflow
+class ExperimentAnalysis {
+    constructor(rawData) {
+        this.rawData = rawData;
+        this.processedData = null;
+        this.results = {};
+    }
+    
+    async analyzeComplete() {
+        // 1. Data validation and cleaning
+        this.processedData = this.preprocessData(this.rawData);
+        
+        // 2. Descriptive statistics
+        this.results.descriptives = this.calculateDescriptives();
+        
+        // 3. Inferential statistics
+        this.results.inferential = this.runInferentialTests();
+        
+        // 4. Effect size calculations
+        this.results.effectSizes = this.calculateEffectSizes();
+        
+        // 5. Generate visualizations
+        this.results.visualizations = this.createVisualizations();
+        
+        return this.results;
+    }
+}</code>
+                </div>
+            </div>
+            
+            <div class="step-box">
+                <h4>📊 Statistical Test Selection</h4>
+                <div class="code-block">
+                    <code>// Automatic test selection based on data type and design
+function selectStatisticalTest(data, design) {
+    if (design.type === 'between-subjects') {
+        if (design.groups === 2) {
+            return data.isNormal ? 'independent-t-test' : 'mann-whitney-u';
+        } else {
+            return data.isNormal ? 'one-way-anova' : 'kruskal-wallis';
+        }
+    } else if (design.type === 'within-subjects') {
+        if (design.conditions === 2) {
+            return data.isNormal ? 'paired-t-test' : 'wilcoxon-signed-rank';
+        } else {
+            return data.isNormal ? 'repeated-measures-anova' : 'friedman';
+        }
+    }
+}</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="completion-section" style="display: none;" id="completion-section">
+            <h3>🎉 Tutorial Complete!</h3>
+            <div class="completion-summary">
+                <h4>🏆 What You've Accomplished</h4>
+                <ul>
+                    <li>✅ <strong>Research Foundation:</strong> Found and analyzed a psychology study (Step 0)</li>
+                    <li>✅ <strong>Development Environment:</strong> Set up professional coding tools (Steps 1-2)</li>
+                    <li>✅ <strong>Interactive Experiment:</strong> Built working psychology experiment (Steps 3-4)</li>
+                    <li>✅ <strong>Experimental Design:</strong> Configured parameters and timing (Step 5)</li>
+                    <li>✅ <strong>Advanced Features:</strong> Implemented AI algorithms from research (Step 6)</li>
+                    <li>✅ <strong>Data Analysis:</strong> Analyzed results with research-quality methods (Step 7)</li>
+                </ul>
+                
+                <h4>🚀 Next Steps in Your Psychology Research Journey</h4>
+                <div class="next-steps-grid">
+                    <div class="next-step-card">
+                        <h5>🔬 Design Your Own Study</h5>
+                        <p>Use these tools to build and run your own psychology experiment from scratch</p>
+                    </div>
+                    
+                    <div class="next-step-card">
+                        <h5>📚 Dive Deeper</h5>
+                        <p>Explore advanced computational psychology methods and cognitive modeling</p>
+                    </div>
+                    
+                    <div class="next-step-card">
+                        <h5>🤝 Share & Collaborate</h5>
+                        <p>Publish your experiments online and collaborate with other researchers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="../option-a-step6/index.html" class="nav-btn secondary">← Step 6: Interactive Elements</a>
+            <a href="../../index.html" class="nav-btn primary">Tutorial Complete! →</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 7 of 7 - Analysis & Visualization Complete</p>
+        </div>
+    </div>
+
+    <script src="../../shared/progress-component.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="step7-analysis.js"></script>
+    <script src="step7-relph-model.js"></script>
+    <script src="step7-visualizations.js"></script>
+</body>
+</html>

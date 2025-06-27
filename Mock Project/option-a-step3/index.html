@@ -3,56 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Step 3: Basic Deployment - Psychology Experiment</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Step 3: Build Your First Experiment</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+        window.currentStep = 3;
+    </script>
 </head>
 <body>
     <div class="container">
-        <h1>Step 3: Basic Deployment</h1>
-        <p class="subtitle">Console Logging & Verification</p>
+        <h1>Step 3: Build Your First Experiment</h1>
+        <p class="subtitle">Create your own interactive experiment from scratch</p>
+        
+        <div id="progress-container"></div>
         
         <div class="info-section">
-            <h3>🎯 Goal: Verify Your Setup Works</h3>
-            <p>Click any button below to test the basic logging functionality. Open your browser's developer console (F12) to see the logged data.</p>
-            <p><strong>Next Steps:</strong> Step 4 will add GitHub REST API integration, Step 5 will add full experiment logic.</p>
+            <h3>🎯 Goal: Create Your Own Working Experiment</h3>
+            <p>In this step, you'll create your own experiment folder and build your first interactive experiment based on your Step 0 research. This is where you transition from following examples to building your own psychology research tool.</p>
+            <ul>
+                <li><strong>Create Your Project:</strong> Set up your own experiment folder with proper structure</li>
+                <li><strong>Build Interactions:</strong> Create buttons and inputs specific to your research</li>
+                <li><strong>Log Data:</strong> Capture participant responses in the browser console</li>
+                <li><strong>Test Locally:</strong> Verify everything works before moving to the next step</li>
+            </ul>
         </div>
 
-        <div class="experiment-section">
-            <h3>Rock Paper Scissors - Basic Test</h3>
-            <p>Choose your move to test logging:</p>
+        <div class="step-section">
+            <h3>⚡ Reference Example: Test Your Deployment</h3>
+            <p>First, test that your deployment works with our Rock-Paper-Scissors example. This confirms your setup is working correctly before you build your own experiment.</p>
             
-            <div class="choice-buttons">
-                <button class="choice-btn" onclick="logChoice('Rock')">🪨 Rock</button>
-                <button class="choice-btn" onclick="logChoice('Paper')">📄 Paper</button>
-                <button class="choice-btn" onclick="logChoice('Scissors')">✂️ Scissors</button>
+            <div class="experiment-section">
+                <h4>Rock Paper Scissors - Deployment Test</h4>
+                <p>Choose your move to test logging:</p>
+                
+                <div class="choice-buttons">
+                    <button class="choice-btn" onclick="logChoice('Rock')">🗿 Rock</button>
+                    <button class="choice-btn" onclick="logChoice('Paper')">📄 Paper</button>
+                    <button class="choice-btn" onclick="logChoice('Scissors')">✂️ Scissors</button>
+                </div>
+                
+                <div id="status">Ready - Click a button to test console logging</div>
             </div>
             
-            <div id="status">Ready - Click a button to test console logging</div>
+            <div class="tip">
+                💡 <strong>Testing Instructions:</strong> Press F12 → Console tab, then click buttons above. You should see structured data logged for each click. This same pattern will work for your experiment.
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📋 How the Example Works (Brief Code Explanation)</h3>
+            <div class="step-box">
+                <h4>1. HTML Button → JavaScript Function Connection</h4>
+                <div class="code-block">
+                    <code>&lt;button onclick="logChoice('Rock')"&gt;🗿 Rock&lt;/button&gt;</code>
+                </div>
+                <p>When clicked, this calls the <code>logChoice('Rock')</code> function with 'Rock' as the parameter.</p>
+            </div>
+            
+            <div class="step-box">
+                <h4>2. JavaScript Logging Function</h4>
+                <div class="code-block">
+                    <code>function logChoice(choice) {
+    const trialData = {
+        timestamp: new Date().toISOString(),
+        choice: choice,
+        trial: trialCount++
+    };
+    console.log('✅ Trial:', trialData);
+}</code>
+                </div>
+                <p>This function creates a data object with timestamp and choice, then logs it to the console.</p>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🏗️ Build Your Own: Create Your Experiment</h3>
+            
+            <div class="step-box">
+                <h4>1. Create Your Project Folder</h4>
+                <p>In your main project directory (same level as "Mock Project"), create your own experiment folder:</p>
+                <ol>
+                    <li>Create a new folder named after your project (e.g., "My Project", "Sarah's Study", "Memory Experiment")</li>
+                    <li>Inside this folder, create <code>index.html</code></li>
+                    <li>Create <code>experiment.js</code> for your JavaScript code</li>
+                    <li>Your structure should look like:</li>
+                </ol>
+                <div class="code-block">
+                    <code>your-project-folder/
+├── Mock Project/ (our examples)
+├── Your Project Name/
+│   ├── index.html (your experiment)
+│   └── experiment.js (your code)
+├── styles.css
+└── index.html (main homepage)</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>2. Basic HTML Structure</h4>
+                <p>Create your <code>index.html</code> file with this basic structure, adapted for your experiment:</p>
+                <div class="code-block">
+                    <code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Your Experiment Name&lt;/title&gt;
+    &lt;link rel="stylesheet" href="../styles.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;h1&gt;Your Experiment Title&lt;/h1&gt;
+        &lt;p&gt;Brief description of what participants will do&lt;/p&gt;
+        
+        &lt;!-- Your experiment buttons/inputs here --&gt;
+        &lt;button onclick="logResponse('Option1')"&gt;First Choice&lt;/button&gt;
+        &lt;button onclick="logResponse('Option2')"&gt;Second Choice&lt;/button&gt;
+        
+        &lt;div id="status"&gt;Ready&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script src="experiment.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>3. JavaScript Logging Function</h4>
+                <p>Create your <code>experiment.js</code> file with basic data logging:</p>
+                <div class="code-block">
+                    <code>let experimentData = [];
+let trialCount = 0;
+
+function logResponse(response) {
+    trialCount++;
+    const trialData = {
+        trial: trialCount,
+        timestamp: new Date().toISOString(),
+        response: response,
+        // Add other data you want to track
+    };
+    
+    experimentData.push(trialData);
+    console.log('✅ New Trial:', trialData);
+    console.log('📊 All Data:', experimentData);
+    
+    // Update page feedback
+    document.getElementById('status').innerHTML = 
+        `Trial ${trialCount}: Recorded '${response}'`;
+}</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>4. Adapt for Your Research</h4>
+                <p>Customize the template based on your Step 0 study design:</p>
+                <ul>
+                    <li><strong>Memory Task:</strong> Buttons for "Remember"/"Forget", word lists, recognition choices</li>
+                    <li><strong>Decision Making:</strong> Risk level sliders, choice buttons, preference ratings</li>
+                    <li><strong>Attention Task:</strong> Detection buttons, direction indicators, timing elements</li>
+                    <li><strong>Social Psychology:</strong> Agreement scales, scenario responses, demographic questions</li>
+                    <li><strong>Perception:</strong> Image comparison, size judgments, color matching</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>5. Link Your Experiment to the Homepage</h4>
+                <p>Once your experiment is working, add it to the main homepage:</p>
+                <ol>
+                    <li>Open the main <code>index.html</code> file in your project root</li>
+                    <li>Find the commented section that says "UNCOMMENT THIS SECTION IN STEP 3"</li>
+                    <li>Remove the <code>&lt;!--</code> and <code>--&gt;</code> comment tags</li>
+                    <li>Update the experiment name, description, and folder path</li>
+                    <li>Save and test locally by opening the homepage in your browser</li>
+                </ol>
+                <div class="tip">💡 Your link will only work when running locally, not on GitHub Pages.</div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🤖 AI-Assisted Development</h3>
+            <div class="step-box">
+                <h4>Use Cursor to Generate Your Experiment Code:</h4>
+                <p>Add your Step 0 research to Cursor's context (@ mention your files), then use this prompt:</p>
+                <div class="code-block">
+                    <code>Based on my Step 0 research planning, help me create my first interactive experiment:
+
+My study focus: [DESCRIBE YOUR RESEARCH FROM STEP 0]
+My experiment needs: [LIST YOUR REQUIRED INTERACTIONS]
+
+Please create:
+1. HTML with appropriate buttons/inputs for my specific task
+2. JavaScript function to capture responses and log structured data
+3. Console logging to verify data collection works
+4. Basic participant feedback after each response
+
+Keep it simple for Step 3 - just basic interaction and console logging. I'll add data storage and analysis in later steps.</code>
+                </div>
+                <button onclick="copyPrompt()" class="primary-btn">📋 Copy AI Prompt</button>
+            </div>
         </div>
 
         <div class="info-section">
-            <h4>Step 3 Verification Checklist:</h4>
-            <ol>
-                <li>✅ GitHub Pages deployed successfully (you're seeing this page)</li>
-                <li>🔍 Open browser developer tools (F12 → Console tab)</li>
-                <li>🖱️ Click any choice button above</li>
-                <li>📊 Verify structured data appears in console</li>
-                <li>🔄 Try clicking multiple buttons to see data accumulation</li>
-            </ol>
-            <p><strong>Once this works</strong>, you're ready for <a href="../option-a-step4/">Step 4: Data Collection</a></p>
+            <h3>✅ Step 3 Completion Checklist</h3>
+            <div class="checklist">
+                <label><input type="checkbox"> Created your own experiment folder with proper structure</label>
+                <label><input type="checkbox"> Built HTML with experiment-specific buttons/inputs</label>
+                <label><input type="checkbox"> JavaScript function logs structured data to console</label>
+                <label><input type="checkbox"> Experiment runs locally without errors</label>
+                <label><input type="checkbox"> Console shows clear, structured data for each interaction</label>
+                <label><input type="checkbox"> Updated main homepage to link to your experiment</label>
+                <label><input type="checkbox"> Confirmed your experiment addresses your Step 0 research question</label>
+            </div>
         </div>
 
-        <div class="info-section">
-            <h4>What's Working Here:</h4>
+        <div class="step-section">
+            <h3>🔧 Troubleshooting</h3>
             <ul>
-                <li><strong>Browser Interaction:</strong> Buttons respond to clicks</li>
-                <li><strong>Data Structure:</strong> Each click creates a structured data entry</li>
-                <li><strong>Console Logging:</strong> Verifies data capture is working</li>
-                <li><strong>GitHub Pages:</strong> Your experiment runs on the web</li>
+                <li><strong>Buttons not responding?</strong> Check browser console (F12) for JavaScript errors</li>
+                <li><strong>No console output?</strong> Ensure developer tools are open and you're on Console tab</li>
+                <li><strong>"Function not found" errors?</strong> Verify your JavaScript file is properly linked in HTML</li>
+                <li><strong>Styles not loading?</strong> Check that your CSS path is correct (<code>../styles.css</code>)</li>
+                <li><strong>Experiment not fitting your research?</strong> Revisit Step 0 planning and adapt the structure</li>
             </ul>
+        </div>
+
+        <div class="navigation">
+            <a href="../option-a-step2/index.html" class="nav-btn secondary">← Step 2: Repository Setup</a>
+            <a href="../option-a-step4/index.html" class="nav-btn primary">Next: Data Collection →</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 3 of 7 - Your First Experiment Created</p>
         </div>
     </div>
 
-    <script src="experiments/exp_rps_updating/rps.js"></script>
+    <script src="../../shared/progress-component.js"></script>
+    <script src="step3-experiment.js"></script>
+    <script>
+        function copyPrompt() {
+            const prompt = `Based on my Step 0 research planning, help me create my first interactive experiment:
+
+My study focus: [DESCRIBE YOUR RESEARCH FROM STEP 0]
+My experiment needs: [LIST YOUR REQUIRED INTERACTIONS]
+
+Please create:
+1. HTML with appropriate buttons/inputs for my specific task
+2. JavaScript function to capture responses and log structured data
+3. Console logging to verify data collection works
+4. Basic participant feedback after each response
+
+Keep it simple for Step 3 - just basic interaction and console logging. I'll add data storage and analysis in later steps.`;
+            
+            navigator.clipboard.writeText(prompt).then(() => {
+                alert('Prompt copied to clipboard! Paste it in Cursor after adding your Step 0 files to context.');
+            });
+        }
+    </script>
 </body>
 </html> 

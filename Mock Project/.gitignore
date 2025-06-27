@@ -1,0 +1,35 @@
+# Project-wide configuration (contains sensitive settings)
+config.js
+
+# Data files (uncomment if you don't want to commit experiment data)
+# data/
+# */data/
+# test-data/
+# */test-data/
+
+# Node modules (if using any)
+node_modules/
+*/node_modules/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Log files
+*.log
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp 

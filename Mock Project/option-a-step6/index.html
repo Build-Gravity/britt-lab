@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 6: Interactive Elements - Psychology Experiment</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+        window.currentStep = 6;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Step 6: Interactive Elements</h1>
+            <p><strong>Goal:</strong> Implement adaptive elements, like an AI opponent, that learn from and respond to participant behavior in real time.</p>
+        </div>
+
+        <div id="progress-container"></div>
+        
+        <div class="info-section">
+            <h3>🎯 Goal: Implement Interactive Experiment Components</h3>
+            <p>This step teaches you to add sophisticated interactions to psychology experiments. You'll learn to implement adaptive algorithms, dynamic feedback, and intelligent opponents using research-validated approaches.</p>
+             <p><strong>What You'll Learn:</strong></p>
+            <ul>
+                <li><strong>AI Algorithms</strong>: RELPH (reinforcement learning) and ELPH (statistical learning) from cognitive research</li>
+                <li><strong>Dynamic Interactions</strong>: Adaptive difficulty, pattern recognition, and intelligent responses</li>
+                <li><strong>Psychology Applications</strong>: Decision-making, learning, competition, and adaptation studies</li>
+                <li><strong>Configuration Integration</strong>: Using your Step 5 parameters to control behavior</li>
+            </ul>
+        </div>
+
+        <div class="step-section">
+            <h3>⭐ Our Example: Rock-Paper-Scissors with an Adaptive AI</h3>
+            <p>This demo features an AI opponent that learns from your choices. The AI algorithm and learning rate are loaded from your Step 5 configuration. Can you beat an AI that adapts to your strategy?</p>
+            
+            <div class="experiment-demo rps-game-demo">
+                <div class="game-container">
+                    <div class="game-header">
+                        <div class="scoreboard">
+                            <div class="score-item">
+                                <span class="score-label">Player</span>
+                                <span class="score-value" id="player-score">0</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">AI</span>
+                                <span class="score-value" id="ai-score">0</span>
+                            </div>
+                            <div class="score-item">
+                                <span class="score-label">Ties</span>
+                                <span class="score-value" id="tie-score">0</span>
+                            </div>
+                        </div>
+                        <div class="round-tracker" id="round-tracker">
+                            Round <span id="current-round">1</span> of <span id="total-rounds">30</span>
+                        </div>
+                    </div>
+
+                    <div class="game-area">
+                        <div class="choice-section">
+                            <p>Make your choice:</p>
+                            <div class="choice-buttons">
+                                <button class="choice-btn" onclick="makeChoice('Rock')">🗿 Rock</button>
+                                <button class="choice-btn" onclick="makeChoice('Paper')">📄 Paper</button>
+                                <button class="choice-btn" onclick="makeChoice('Scissors')">✂️ Scissors</button>
+                            </div>
+                        </div>
+
+                        <div id="reveal-section" class="reveal-section" style="display:none;">
+                            <div class="choice-reveal">
+                                <div class="player-choice">
+                                    <div class="choice-display" id="player-choice-display">
+                                        <span class="choice-emoji-large" id="player-emoji">🗿</span>
+                                        <span class="choice-name" id="player-choice-name">Rock</span>
+                                    </div>
+                                </div>
+                                <div class="vs-divider">vs</div>
+                                <div class="ai-choice">
+                                    <div class="choice-display" id="ai-choice-display">
+                                        <span class="choice-emoji-large" id="ai-emoji">📄</span>
+                                        <span class="choice-name" id="ai-choice-name">Paper</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="result-display" id="result-display">
+                                <div class="result-text" id="result-text">AI Wins!</div>
+                                <div class="result-reason" id="result-reason">Paper covers Rock</div>
+                                <div class="ai-reasoning" id="ai-reasoning">AI predicted Rock based on your last 2 moves</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="game-status" id="game-status">
+                        <p>Ready to play! The AI will adapt its strategy as you play.</p>
+                        <p><small>Configuration loaded from Step 5. AI algorithm and learning rate set.</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-complete-section" id="game-complete" style="display: none;">
+            <h3>🎉 Game Complete!</h3>
+            <div class="final-results" id="final-results">
+                <!-- Results will be populated by JavaScript -->
+            </div>
+            <p>See how the AI performed and whether it learned your playing style!</p>
+            
+            <div class="data-export-section">
+                <h4>What's Next?</h4>
+                <ul>
+                    <li><strong>Save Your Data:</strong> Download the results to see exactly how the AI adapted</li>
+                    <li><strong>Try Again:</strong> Reset and test a different AI algorithm</li>
+                    <li><strong>Build Your Own:</strong> Use these ideas in your own experiment</li>
+                </ul>
+                <div class="action-buttons">
+                    <button id="export-data-btn" class="primary-btn download-btn">Download Results</button>
+                    <button id="reset-game-btn" class="secondary-btn">Play Again</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📚 AI Algorithms from Cognitive Research</h3>
+            <p>Our implementation uses algorithms from Mohammadi Sepahvand et al. (2014) - a study of how humans learn in sequential decision tasks:</p>
+            
+            <div class="step-box">
+                <h4>🧠 RELPH (Reinforcement Learning)</h4>
+                <p><strong>How it works:</strong> Learns which actions are rewarding in specific contexts</p>
+                <ul>
+                    <li><strong>Memory:</strong> Stores reward values for different action-context pairs</li>
+                    <li><strong>Learning:</strong> Updates values based on wins/losses (α parameter controls learning speed)</li>
+                    <li><strong>Decision:</strong> Chooses actions that have been most rewarding previously</li>
+                    <li><strong>Psychology:</strong> Models how humans learn from trial-and-error feedback</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>📊 ELPH (Statistical Learning)</h4>
+                <p><strong>How it works:</strong> Predicts what opponents will do next based on patterns</p>
+                <ul>
+                    <li><strong>Memory:</strong> Tracks sequences and what typically follows them</li>
+                    <li><strong>Learning:</strong> Updates probability estimates for different patterns</li>
+                    <li><strong>Decision:</strong> Predicts most likely next move and counters it</li>
+                    <li><strong>Psychology:</strong> Models pattern recognition and statistical learning</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>⚙️ Research Parameters</h4>
+                <ul>
+                    <li><strong>α (Learning Rate):</strong> 0.1-0.7 - how quickly the AI adapts to new information</li>
+                    <li><strong>n (Memory Length):</strong> 1-3 - how many previous moves the AI considers</li>
+                    <li><strong>Exploration vs Exploitation:</strong> Balance between trying new strategies vs using proven ones</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🏗️ Build Your Own Interactive Elements</h3>
+            <p>Now adapt these patterns for your experiment from Step 0. The RPS example demonstrates the basic structure - here's how to modify it:</p>
+            
+            <div class="step-box">
+                <h4>🎯 Adapting the Simple Experiment Flow</h4>
+                <p>The <strong>step6-experiment.js</strong> file shows the basic patterns you can modify:</p>
+                <ul>
+                    <li><strong>Choice Recording:</strong> Change <code>makeChoice(choice)</code> to capture your experiment's response types</li>
+                    <li><strong>Game Logic:</strong> Replace <code>determineWinner()</code> with your task's success/failure logic</li>
+                    <li><strong>Data Recording:</strong> Modify <code>recordTrialData()</code> to capture your experiment's variables</li>
+                    <li><strong>UI Updates:</strong> Adapt <code>showResults()</code> to display your experiment's feedback</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>🤖 Using the AI Algorithms</h4>
+                <p>The <strong>step6-ai-algorithms.js</strong> file provides ready-to-use algorithms for adaptive behavior:</p>
+                <ul>
+                    <li><strong>Adaptive Difficulty:</strong> Use RELPH to adjust challenge based on performance</li>
+                    <li><strong>Pattern Recognition:</strong> Use ELPH to detect and respond to participant strategies</li>
+                    <li><strong>Control Condition:</strong> Use Random for baseline comparisons</li>
+                    <li><strong>Simple Interface:</strong> All algorithms use the same <code>makeMove()</code> and <code>learn()</code> functions</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>🎮 Common Adaptations</h4>
+                <p>Examples of how to adapt the RPS pattern for different experiments:</p>
+                <ul>
+                    <li><strong>Memory Task:</strong> AI adjusts difficulty based on accuracy - easier items after mistakes</li>
+                    <li><strong>Attention Task:</strong> AI varies signal timing based on response speed patterns</li>
+                    <li><strong>Decision Task:</strong> AI provides feedback that adapts to participant confidence levels</li>
+                    <li><strong>Learning Task:</strong> AI schedules practice items based on forgetting curve models</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🔬 Psychology Applications</h3>
+            <p>These interactive elements can be adapted for various psychology experiments:</p>
+            
+            <div class="step-box">
+                <h4>🎯 Decision-Making Studies</h4>
+                <ul>
+                    <li><strong>Strategic Thinking:</strong> How do people adapt to intelligent opponents?</li>
+                    <li><strong>Risk Assessment:</strong> Adaptive difficulty based on risk tolerance</li>
+                    <li><strong>Learning Curves:</strong> Track how quickly people learn optimal strategies</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>🧠 Learning & Memory Studies</h4>
+                <ul>
+                    <li><strong>Adaptive Testing:</strong> Difficulty adjusts to maintain optimal challenge</li>
+                    <li><strong>Spaced Repetition:</strong> AI determines optimal review timing</li>
+                    <li><strong>Forgetting Curves:</strong> Dynamic scheduling based on memory performance</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>⚡ Attention & Performance Studies</h4>
+                <ul>
+                    <li><strong>Vigilance Tasks:</strong> AI varies signal frequency to maintain attention</li>
+                    <li><strong>Workload Management:</strong> Adaptive task difficulty prevents overload</li>
+                    <li><strong>Flow States:</strong> AI maintains optimal challenge-skill balance</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>✅ Step 6 Checklist</h3>
+            <div class="checklist">
+                <label><input type="checkbox" id="check-ai-design"> <strong>Designed Interactive Elements</strong> - Used AI to plan components for your experiment</label>
+                <label><input type="checkbox" id="check-algorithm"> <strong>Chose Algorithm Approach</strong> - Selected reinforcement learning, pattern recognition, or adaptive difficulty</label>
+                <label><input type="checkbox" id="check-implementation"> <strong>Implemented Interactive Code</strong> - Built functional interactive elements for your experiment</label>
+                <label><input type="checkbox" id="check-rps-demo"> <strong>Explored RPS Algorithms</strong> - Tested different AI approaches in the demonstration</label>
+                <label><input type="checkbox" id="check-integration"> <strong>Configuration Integration</strong> - Connected Step 5 parameters to interactive behavior</label>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📚 Code Structure - Simple & Adaptable</h3>
+            <p>The code is organized to separate complex AI algorithms from simple experiment patterns you can easily adapt:</p>
+            
+            <div class="step-box">
+                <h4>🤖 AI Algorithms File (step6-ai-algorithms.js)</h4>
+                <p><strong>Research-Quality Algorithms:</strong> Contains sophisticated AI that you can use without understanding the complex implementation:</p>
+                <div class="code-block">
+                    <code>// Simple interface to complex algorithms
+const aiAgent = createAIAgent('relph', 0.3, 2);
+const aiChoice = aiAgent.makeMove(playerHistory);
+aiAgent.learn(playerChoice, aiChoice, result);</code>
+                </div>
+                <p><strong>Three Algorithm Options:</strong> RELPH (reinforcement learning), ELPH (pattern prediction), or Random (control condition)</p>
+            </div>
+            
+            <div class="step-box">
+                <h4>⚙️ Experiment File (step6-experiment.js)</h4>
+                <p><strong>Simple Patterns You Can Adapt:</strong> Basic experiment mechanics that are easy to modify for your own study:</p>
+                <div class="code-block">
+                    <code>// Easy-to-adapt experiment patterns
+function makeChoice(choice) {
+    // 1. Record participant choice
+    const playerChoice = choice;
+    gameState.playerHistory.push(playerChoice);
+    
+    // 2. Get AI response (complex algorithms in separate file)
+    const aiChoice = gameState.aiAgent.makeMove(gameState.playerHistory);
+    
+    // 3. Simple game logic you can adapt
+    const result = determineWinner(playerChoice, aiChoice);
+    updateScores(result);
+    
+    // 4. Record data and update UI
+    recordTrialData(playerChoice, aiChoice, result);
+    showChoices(playerChoice, aiChoice, result);
+}</code>
+                </div>
+                <p><strong>Key Insight:</strong> The complex AI algorithms are handled separately, so you can focus on adapting the simple experiment flow for your own research.</p>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🤖 AI-Assisted Interactive Design</h3>
+            <p>Use AI assistants to help design and implement interactive elements for your experiment:</p>
+            
+            <div class="step-box">
+                <h4>💡 Design Your Interactive Elements</h4>
+                <p>Generate ideas for adaptive behavior in your experiment:</p>
+                <div class="action-buttons">
+                    <button onclick="copyInteractivePrompt()" class="btn secondary">Copy Interactive Design Prompt</button>
+                </div>
+                <div class="prompt-preview">
+                    <p><em>I'm building interactive elements for my [EXPERIMENT TYPE] study from Step 0: [YOUR STUDY DESCRIPTION]. I need help implementing [adaptive difficulty/AI opponent/dynamic feedback] that [learns from participant behavior/adapts to performance]. Can you help me design the algorithm?</em></p>
+                </div>
+            </div>
+            
+            <div class="step-box">
+                <h4>⚙️ Implement Your Interactive Code</h4>
+                <p>Get help adapting the experiment patterns for your specific study:</p>
+                <div class="action-buttons">
+                    <button onclick="copyImplementationPrompt()" class="btn secondary">Copy Implementation Prompt</button>
+                </div>
+                <div class="prompt-preview">
+                    <p><em>I want to add interactive elements to my psychology experiment. Based on my JSON configuration from Step 5: [PASTE CONFIG] Help me implement [SPECIFIC INTERACTIVE ELEMENT] that adapts to participant behavior using JavaScript.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="../option-a-step5/index.html" class="nav-btn secondary">← Step 5: Experimental Design</a>
+            <a href="../option-a-step7/index.html" class="nav-btn primary">Next: Analysis & Visualization →</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 6 of 7 - Interactive Elements Complete</p>
+        </div>
+    </div>
+
+    <script src="../../shared/progress-component.js"></script>
+    <script src="step6-ai-algorithms.js"></script>
+    <script src="step6-experiment.js"></script>
+</body>
+</html> 

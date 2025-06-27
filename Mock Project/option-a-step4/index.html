@@ -3,74 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Step 4: Data Collection - Psychology Experiment</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Step 4: Simple Data Collection</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+        window.currentStep = 4;
+    </script>
 </head>
 <body>
     <div class="container">
-        <h1>Step 4: Data Collection</h1>
-        <p class="subtitle">GitHub REST API Integration</p>
+        <h1>📊 Step 4: Simple Data Collection</h1>
+        <p class="subtitle">Saving Data Locally and Exporting for Analysis</p>
+        
+        <div id="progress-container"></div>
         
         <div class="info-section">
-            <h3>🎯 Goal: Automated Data Saving</h3>
-            <p>Your experiment results now automatically save back to your GitHub repository. Each interaction creates a data file that you can analyze later.</p>
-            <p><strong>What's New:</strong> GitHub REST API integration, automatic file creation, persistent data storage</p>
-        </div>
-
-        <div class="setup-section">
-            <h3>⚙️ Setup Required</h3>
-            <div class="setup-form">
-                <label for="github-token">GitHub Personal Access Token:</label>
-                <input type="password" id="github-token" placeholder="ghp_..." style="width: 300px;">
-                
-                <label for="repo-owner">Repository Owner:</label>
-                <input type="text" id="repo-owner" placeholder="your-username" style="width: 200px;">
-                
-                <label for="repo-name">Repository Name:</label>
-                <input type="text" id="repo-name" placeholder="your-repo-name" style="width: 200px;">
-                
-                <button onclick="configureAPI()" class="config-btn">Configure & Test</button>
-            </div>
-            <div id="config-status" class="status-message"></div>
-        </div>
-
-        <div class="experiment-section">
-            <h3>Rock Paper Scissors - With Data Collection</h3>
-            <p>Choose your move (data will save to GitHub):</p>
-            
-            <div class="choice-buttons">
-                <button class="choice-btn" onclick="makeChoice('Rock')" disabled id="rock-btn">🪨 Rock</button>
-                <button class="choice-btn" onclick="makeChoice('Paper')" disabled id="paper-btn">📄 Paper</button>
-                <button class="choice-btn" onclick="makeChoice('Scissors')" disabled id="scissors-btn">✂️ Scissors</button>
-            </div>
-            
-            <div id="status">Configure GitHub API above to enable experiment</div>
-            <div id="data-log"></div>
-        </div>
-
-        <div class="info-section">
-            <h4>Step 4 Features:</h4>
+            <h3>🎯 Goal: Implement Local Data Collection &amp; Export</h3>
+            <p>This step builds on Step 3 by replacing temporary console logs with persistent data storage in your browser. You'll learn to save data locally using <code>localStorage</code> and export it for analysis.</p>
             <ul>
-                <li><strong>GitHub API Integration:</strong> Automatic data file creation in your repository</li>
-                <li><strong>Persistent Storage:</strong> All experiment data saved permanently</li>
-                <li><strong>JSON Format:</strong> Structured data ready for analysis</li>
-                <li><strong>Real-time Feedback:</strong> See exactly what data is being saved</li>
+                <li><strong>Local Storage:</strong> Persistently save data in the user's browser.</li>
+                <li><strong>Data Export:</strong> Download your complete dataset as JSON (for code) and CSV (for spreadsheets).</li>
+                <li><strong>Persistent Data:</strong> Your data remains even if the page is refreshed.</li>
             </ul>
         </div>
 
+        <div class="experiment-section">
+            <h3>Rock Paper Scissors - Live Data Collection</h3>
+            <p>Click a choice to log it. Your data is automatically saved to your browser's local storage.</p>
+            
+            <div class="choice-buttons">
+                <button class="choice-btn" onclick="logChoice('Rock')">🗿 Rock</button>
+                <button class="choice-btn" onclick="logChoice('Paper')">📄 Paper</button>
+                <button class="choice-btn" onclick="logChoice('Scissors')">✂️ Scissors</button>
+            </div>
+            
+            <div id="status">Ready - Click a button to start collecting data</div>
+
+            <div class="data-controls">
+                <button onclick="downloadJSON()" class="download-btn">📥 Download JSON</button>
+                <button onclick="downloadCSV()" class="download-btn">📊 Download CSV</button>
+                <button onclick="clearData()" class="secondary-btn">🗑️ Clear Data</button>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h4>📚 How It Works: Local Storage & Data Flow</h4>
+            <div class="step-box">
+                <h4>💾 Local Storage</h4>
+                <p>This step uses the browser's built-in <code>localStorage</code> API. It's a simple key-value store that persists even when the user closes the tab.</p>
+                <ul>
+                    <li><strong>Simple & Built-in:</strong> No external libraries or services are needed.</li>
+                    <li><strong>Persistent:</strong> Data is saved until the user manually clears their browser data.</li>
+                    <li><strong>Private:</strong> Data is stored only on the user's computer.</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>🔍 Data Flow</h4>
+                <ol>
+                    <li><strong>Click Button:</strong> A data object is created.</li>
+                    <li><strong>Save to LocalStorage:</strong> The new data is added to an array, which is then saved to <code>localStorage</code> as a JSON string.</li>
+                    <li><strong>Download Data:</strong> The "Download" buttons retrieve the JSON string from <code>localStorage</code>, parse it, and convert it into a downloadable file (JSON or CSV).</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h4>🔧 Build Your Own Local Data Experiment</h4>
+            <div class="step-box">
+                <h4>Code Example: Saving to localStorage</h4>
+                <p>Saving data is a two-step process: add to your array, then save the whole array.</p>
+                <div class="code-block">
+                    <code>
+// Add new trial data to our array
+experimentData.push(trialData);
+
+// Save the entire updated array to localStorage
+localStorage.setItem('myExperimentData', JSON.stringify(experimentData));
+                    </code>
+                </div>
+            </div>
+            
+            <div class="step-box">
+                <h4>🤖 Cursor Prompt for Local Data:</h4>
+                <div class="code-block">
+                    <code>I want to add local data collection to my experiment using localStorage.
+
+I need help with:
+1. A 'logChoice' function that saves data to localStorage.
+2. A function to load existing data from localStorage when the page opens.
+3. Download functions for both JSON and CSV formats.
+4. A button to clear the data from localStorage.
+
+The goal is to collect data that persists between page loads, all locally in the browser.</code>
+                </div>
+                <button onclick="copyStep4Prompt()" class="primary-btn">📋 Copy Adaptation Prompt</button>
+            </div>
+        </div>
+
         <div class="info-section">
-            <h4>Getting Your GitHub Token:</h4>
-            <ol>
-                <li>Go to GitHub → Settings → Developer settings → Personal access tokens</li>
-                <li>Generate new token (classic)</li>
-                <li>Select 'repo' scope for repository access</li>
-                <li>Copy the token and paste it above</li>
-            </ol>
-            <p><strong>Note:</strong> Token stays in your browser, never sent to external servers</p>
+            <h4>✅ Step 4 Checklist & Troubleshooting</h4>
+             <ul>
+                <li><strong>Data Persists:</strong> After clicking a choice, refresh the page. The data should still be there.</li>
+                <li><strong>Downloads Work:</strong> JSON and CSV downloads should contain all collected data.</li>
+                <li><strong>Data Clears:</strong> Clicking "Clear Data" should reset the experiment.</li>
+                <li><strong>Troubleshooting:</strong> Data not saving? Check the browser console for errors related to `localStorage` or `JSON.stringify`.</li>
+            </ul>
+        </div>
+
+        <div class="navigation">
+            <a href="../option-a-step3/index.html" class="nav-btn secondary">← Step 3: Basic Deployment</a>
+            <a href="../option-a-step5/index.html" class="nav-btn primary">Next: Experimental Design →</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 4 of 7 - Simple Data Collection Complete</p>
         </div>
     </div>
-
-    <script src="experiments/exp_rps_updating/github-api.js"></script>
-    <script src="experiments/exp_rps_updating/rps-step4.js"></script>
+    
+    <script src="../../shared/progress-component.js"></script>
+    <script src="step4-experiment.js"></script>
 </body>
 </html> 

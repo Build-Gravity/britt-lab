@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 5: Experimental Design - Psychology Experiment</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+        window.currentStep = 5;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Step 5: Experimental Design</h1>
+            <p><strong>Goal:</strong> Build an interface to configure your experiment's parameters (like trial count and timing) and connect them to your code.</p>
+        </div>
+
+        <div id="progress-container"></div>
+
+        <div class="info-section">
+            <h3>🎯 Goal: Design Your Experiment Parameters</h3>
+            <p>This step teaches you to systematically configure your psychology experiment's timing, structure, and conditions. You'll learn to balance statistical power with participant engagement while following psychology research best practices.</p>
+            <p><strong>What You'll Learn:</strong></p>
+            <ul>
+                <li><strong>Experimental Design</strong>: Configure trial counts, timing parameters, and condition structures</li>
+                <li><strong>Psychology Principles</strong>: Apply research standards for participant experience and data quality</li>
+                <li><strong>Configuration Management</strong>: Create professional configuration files that control experiment behavior</li>
+                <li><strong>Parameter Testing</strong>: Use interactive tools to test how different settings affect the experiment feel</li>
+            </ul>
+        </div>
+
+        <div class="step-section">
+            <h3>⭐ Our Example: Configuring the RPS Experiment</h3>
+            <p>This interface allows you to change the parameters for our Rock-Paper-Scissors example. The settings you save here will be used in the next step. Test how different configurations change the feel of the experiment.</p>
+            
+            <div class="experiment-demo rps-config-demo">
+                <div class="config-form-container">
+                    <h4>RPS Example Configuration</h4>
+                    <form id="rps-config-form">
+                        <div class="form-group">
+                            <label for="num-trials">Number of Trials (5-50):</label>
+                            <input type="range" id="num-trials" name="numTrials" min="5" max="50" value="30">
+                            <span id="num-trials-value">30</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="feedback-delay">Feedback Duration (ms):</label>
+                            <input type="range" id="feedback-delay" name="feedbackDelay" min="500" max="3000" step="100" value="1500">
+                            <span id="feedback-delay-value">1500ms</span>
+                        </div>
+                         <div class="form-group">
+                            <label for="ai-algorithm">AI Algorithm:</label>
+                            <select id="ai-algorithm" name="aiAlgorithm">
+                                <option value="relph">RELPH (Reinforcement Learning)</option>
+                                <option value="elph">ELPH (Statistical Learning)</option>
+                                <option value="random">Random (Control)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="learning-rate">AI Learning Rate:</label>
+                            <select id="learning-rate" name="learningRate">
+                                <option value="slow">Slow (α=0.1)</option>
+                                <option value="moderate" selected>Moderate (α=0.3)</option>
+                                <option value="fast">Fast (α=0.7)</option>
+                            </select>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="show-progress" name="showProgress" checked>
+                            <label for="show-progress">Show Progress Bar</label>
+                        </div>
+                        <div class="action-buttons">
+                            <button type="submit" class="primary-btn">Save Configuration</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="config-preview-container">
+                    <h4>Live Preview & Info</h4>
+                    <p>Estimated time to complete: <strong id="estimated-time">~1 minute</strong></p>
+                    <p>Your configuration is saved in your browser's <code>localStorage</code>. Step 6 will automatically load these settings.</p>
+                    <div id="status-message" class="status-message" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🏗️ Build Your Own Configuration Interface</h3>
+            <p>Now, create a configuration file for <strong>your</strong> experiment from Step 0. While the RPS example uses a web form for interactive demonstration, a JSON file is a more robust and professional standard for your own research projects.</p>
+            
+            <div class="step-box">
+                <h4>📝 Create Your Configuration File</h4>
+                <p>Based on your Step 0 study and AI design consultation, create <code>config.json</code> in your experiment folder:</p>
+                <div class="code-block">
+                    <code>{
+  "experiment": {
+    "title": "Your Study Title from Step 0",
+    "type": "reaction-time",
+    "version": "1.0"
+  },
+  "timing": {
+    "trialDuration": 3000,
+    "interTrialInterval": 1500,
+    "feedbackDuration": 1000,
+    "maxResponseTime": 5000
+  },
+  "structure": {
+    "practiceTrials": 10,
+    "experimentTrials": 120,
+    "blocks": 3,
+    "breakDuration": 30000
+  },
+  "display": {
+    "showProgress": true,
+    "showFeedback": true,
+    "showAccuracy": false
+  },
+  "conditions": {
+    "randomizeOrder": true,
+    "balanceConditions": true,
+    "adaptiveDifficulty": false
+  }
+}</code>
+                </div>
+                <button onclick="copyConfigTemplate()" class="secondary-btn">📋 Copy JSON Template</button>
+            </div>
+
+            <div class="step-box">
+                <h4>⚙️ Adapt for Your Experiment Type</h4>
+                <p><strong>For your specific study:</strong></p>
+                <ol>
+                    <li><strong>Modify timing</strong>: Adjust based on your task requirements</li>
+                    <li><strong>Set trial counts</strong>: Balance statistical power vs. participant fatigue</li>
+                    <li><strong>Configure conditions</strong>: Match your experimental design</li>
+                    <li><strong>Test locally</strong>: Load and validate your JSON in Step 6</li>
+                </ol>
+            </div>
+
+            <div class="step-box">
+                <h4>🤖 Cursor Implementation Prompt</h4>
+                <div class="code-block">
+                    <code>I have a JSON configuration file for my psychology experiment. Help me write JavaScript to:
+
+1. Load the JSON config file at experiment startup
+2. Apply timing parameters to control trial flow
+3. Use structure settings to manage blocks and breaks
+4. Implement display options (progress, feedback)
+5. Handle condition randomization and balancing
+
+My config structure is: [PASTE YOUR JSON]</code>
+                </div>
+                <button onclick="copyImplementationPrompt()" class="primary-btn">📋 Copy Implementation Prompt</button>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📋 Psychology Design Principles</h3>
+            <div class="step-box">
+                <h4>⏰ Timing Considerations</h4>
+                <ul>
+                    <li><strong>Trial Duration</strong>: Long enough for valid responses, short enough to maintain attention</li>
+                    <li><strong>Inter-Trial Intervals</strong>: Prevent carry-over effects, allow mental reset</li>
+                    <li><strong>Total Duration</strong>: Most online experiments should be 5-15 minutes maximum</li>
+                    <li><strong>Break Scheduling</strong>: Every 50-100 trials for longer experiments</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>📊 Statistical Considerations</h4>
+                <ul>
+                    <li><strong>Power Analysis</strong>: More trials needed for small effect sizes</li>
+                    <li><strong>Individual Differences</strong>: Account for participant variability</li>
+                    <li><strong>Practice Effects</strong>: Include sufficient practice trials</li>
+                    <li><strong>Counterbalancing</strong>: Randomize order to control sequence effects</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>👥 Participant Experience</h4>
+                <ul>
+                    <li><strong>Feedback Strategy</strong>: When and how to provide performance feedback</li>
+                    <li><strong>Progress Indicators</strong>: Help with motivation but may bias behavior</li>
+                    <li><strong>Difficulty Curves</strong>: Gradual introduction prevents frustration</li>
+                    <li><strong>Engagement</strong>: Balance rigor with participant enjoyment</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>✅ Step 5 Checklist</h3>
+            <div class="checklist">
+                <label><input type="checkbox" id="check-config-design"> <strong>Designed Configuration</strong> - Used AI to plan your experiment's parameters</label>
+                <label><input type="checkbox" id="check-json-created"> <strong>Created JSON Config</strong> - Built a `config.json` file for your experiment</label>
+                <label><input type="checkbox" id="check-rps-config"> <strong>Explored RPS Config</strong> - Tested different settings in the demonstration</label>
+                <label><input type="checkbox" id="check-config-saved"> <strong>Saved RPS Config</strong> - Saved the settings for the next step</label>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📚 How Configuration Works (Code Implementation)</h3>
+            <p>Understanding how experiments load and use configuration files:</p>
+            
+            <div class="step-box">
+                <h4>📄 Loading JSON Configuration</h4>
+                <div class="code-block">
+                    <code>// Load configuration at experiment startup
+async function loadConfig() {
+    try {
+        const response = await fetch('config.json');
+        const config = await response.json();
+        
+        // Apply timing settings
+        experimentParams.trialDuration = config.timing.trialDuration;
+        experimentParams.interTrialInterval = config.timing.interTrialInterval;
+        
+        // Apply structure settings
+        experimentParams.totalTrials = config.structure.experimentTrials;
+        experimentParams.practiceTrials = config.structure.practiceTrials;
+        
+        console.log('Configuration loaded:', config);
+    } catch (error) {
+        console.error('Failed to load config, using defaults:', error);
+    }
+}</code>
+                </div>
+            </div>
+            
+            <div class="step-box">
+                <h4>⚙️ Applying Configuration</h4>
+                <div class="code-block">
+                    <code>// Use configuration to control experiment flow
+function startTrial() {
+    // Use configured timing
+    setTimeout(() => {
+        hideStimulusAndCollectResponse();
+    }, config.timing.trialDuration);
+}
+
+function endTrial() {
+    // Use configured inter-trial interval
+    setTimeout(() => {
+        if (config.display.showProgress) {
+            updateProgressBar();
+        }
+        startNextTrial();
+    }, config.timing.interTrialInterval);
+}</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="../option-a-step4/index.html" class="nav-btn secondary">← Step 4: Data Collection</a>
+            <a href="../option-a-step6/index.html" class="nav-btn primary">Next: Interactive Elements →</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 5 of 7 - Experimental Design Complete</p>
+        </div>
+    </div>
+
+    <script src="../../shared/progress-component.js"></script>
+    <script src="step5-experiment.js"></script>
+</body>
+</html> 

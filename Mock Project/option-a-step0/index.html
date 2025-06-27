@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 0: Find Your Research Inspiration</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+        window.currentStep = 0;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Step 0: Research & Planning</h1>
+            <p><strong>Goal:</strong> Find a psychology study that interests you and document a plan to adapt it into a web experiment.</p>
+        </div>
+
+        <div id="progress-container"></div>
+
+        <div class="info-section">
+            <h3>🎯 Goal: Find Research That Interests You</h3>
+            <p>Before coding anything, you need to find research that interests you and understand what makes experiments effective. Look for studies that seem particularly clever or insightful.</p>
+            <p><strong>By the end of this step:</strong> You'll have found an interesting study to be transformed into a digital psych experiment.</p>
+        </div>
+
+        <div class="step-section">
+            <h3>⭐ Our Example: A Rock-Paper-Scissors Study</h3>
+            <p>To demonstrate the process, we chose the following study as our inspiration. Throughout this tutorial, we will build a web-based version of this experiment, and you will adapt each step to build your own.</p>
+            <div class="reference-box">
+                <p><strong>Study Reference:</strong><br>
+                Mohammadi Sepahvand, N., Stöttinger, E., Danckert, J., & Anderson, B. (2014). Sequential decisions: A computational comparison of observational and reinforcement accounts. <em>PLoS ONE, 9</em>(4), e94308.</p>
+                <p><strong>Research Question:</strong><br>
+                How do humans build and update mental models to make sequential decisions under uncertainty? Specifically, when playing against an opponent whose strategy changes over time, do people use statistical learning (trying to predict what the opponent will do next) or reinforcement learning (learning which actions tend to lead to wins)? The study tested this by having participants play Rock-Paper-Scissors against a computer that shifted from random play to increasingly biased strategies, then used computational modeling to determine which learning approach best explained human behavior.</p>
+                <p><strong>Our Adaptation:</strong><br>
+                Build a web-based Rock-Paper-Scissors game where participants play 30-50 rounds against multiple AI opponents with different learning strategies. We implement the original study's biased algorithms (random play, lightly biased toward rock at 50%, heavily biased toward paper at 80%) plus additional research-validated AI algorithms including RELPH (reinforcement learning) and ELPH (statistical learning) from the original paper. We track participant choices, reaction times, win rates, learning curves, and strategy adaptation patterns. The experiment measures whether participants detect different AI strategy types and adapt their play accordingly, while collecting rich behavioral data including choice entropy, pattern recognition, and individual differences in learning rates suitable for computational modeling and statistical analysis.</p>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📚 Phase 1: Find Your Study to Replicate</h3>
+            <p>The goal is simple: <strong>find an article about a psychology experiment that interests you and that you want to recreate</strong>. Here are some approaches to help you get there:</p>
+            
+            <div class="step-box">
+                <h4>📖 Literature Search</h4>
+                <p>Browse psychology research directly:</p>
+                <ul>
+                    <li><strong>Google Scholar:</strong> Search for "psychology experiment" + your interests (memory, attention, decision-making)</li>
+                    <li><strong>PsyArXiv:</strong> Browse preprints for cutting-edge research</li>
+                    <li><strong>Journal browsing:</strong> Check recent issues of <em>Psychological Science</em>, <em>Cognition</em>, or <em>Journal of Experimental Psychology</em></li>
+                </ul>
+            </div>
+
+            <div class="step-box optional-method">
+                <h4>🤖 Optional: AI Research Assistant</h4>
+                <p>Use this prompt with Claude, ChatGPT, or Gemini:</p>
+                <div class="formatted-prompt">
+                    <div class="prompt-header">
+                        <span class="prompt-title">AI Research Prompt</span>
+                        <button onclick="copyResearchPrompt()" class="prompt-copy-btn">📋 Copy Prompt</button>
+                    </div>
+                    <div class="prompt-content">
+                        <p><strong>I want to find interesting psychology experiments that could inspire a digital study.</strong></p>
+                        
+                        <p><strong>Please suggest 5 psychology experiments that:</strong></p>
+                        <ul>
+                            <li>Test specific hypotheses about how the mind works</li>
+                            <li>Could be adapted as simple computer tasks (reaction time, choices, memory tests)</li>
+                            <li>Would generate meaningful data in 5-10 minutes</li>
+                        </ul>
+                        
+                        <p><strong>For each suggestion, explain:</strong></p>
+                        <ul>
+                            <li>The core research question</li>
+                            <li>What participants actually do in the experiment</li>
+                            <li>Why the finding is interesting or important</li>
+                            <li>How you might adapt it as a digital experiment</li>
+                        </ul>
+                        
+                        <p><em>Focus on experiments that are interesting or reveal something surprising about cognition.</em></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-box optional-method">
+                <h4>🎯 Optional: Replications & Extensions</h4>
+                <p>Find classic studies to replicate or extend:</p>
+                <ul>
+                    <li><strong>Many Labs projects:</strong> Large-scale replication efforts often highlight important studies</li>
+                    <li><strong>Textbook experiments:</strong> Classic findings that could benefit from modern web-based testing</li>
+                    <li><strong>Failed replications:</strong> Studies that didn't replicate might work with different parameters</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>📝 Document Your Chosen Study</h4>
+                <p>Once you've selected a study, create a markdown file in your repository with the study's key details. This should include the abstract, main findings, methodology, and your notes about why it interests you. See our <code>sequential-decisions.md</code> file as an example of the level of detail to capture.</p>
+            </div>
+
+            <div class="step-box">
+                <h4>🔍 What to Look For</h4>
+                <p>As you review potential studies, ask yourself:</p>
+                <ul>
+                    <li><strong>What interests me about this experiment or result?</strong> - Look for findings that surprise you, challenge assumptions, or reveal something counterintuitive about how the mind works. The best experiments often show that our everyday intuitions about cognition are wrong.</li>
+                    <li><strong>Could I realistically build this?</strong> - Digital experiments work best with simple interactions: clicking, typing, choosing between options, or timing responses. Avoid studies requiring specialized equipment, complex stimuli, or face-to-face interaction.</li>
+                    <li><strong>Is the method clear enough to adapt?</strong> - You should understand what participants actually do step-by-step. If the procedure seems vague or overly complex, it may be difficult to implement faithfully.</li>
+                    <li><strong>Would this generate meaningful data quickly?</strong> - Online participants have limited attention spans. Look for experiments that can reveal interesting patterns within 5-10 minutes of testing.</li>
+                    <li><strong>How could I improve or extend this study?</strong> - Consider optional modifications: Could you add new measures? Test different populations? Vary the conditions? Think about what the original authors might have done differently or what questions they left unanswered.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📝 Phase 2: Choose Your Study</h3>
+            
+            <div class="config-section">
+                <h4>Save Your Chosen Study</h4>
+                <p>Once you find a study that interests you, capture the key details:</p>
+                <div class="config-form">
+                    <div class="config-group">
+                        <label for="citation">Study Citation:</label>
+                        <input type="text" id="citation" placeholder="e.g., Smith, J., & Jones, A. (2020). How attention shapes memory. Journal of Experimental Psychology, 45(3), 123-145.">
+                        <small>Full citation including authors, year, title, and publication details.</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label for="research-question">Core Research Question:</label>
+                        <textarea id="research-question" placeholder="e.g., How do people learn patterns without conscious awareness? What specific cognitive process is being tested?"></textarea>
+                        <small>What question does this study investigate? Be specific about the underlying mechanism being tested.</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label for="adaptation">Your Adaptation Idea:</label>
+                        <textarea id="adaptation" placeholder="e.g., I could build a sequence prediction task where participants click on shapes that appear in different locations. I'll measure reaction times and accuracy to see if they learn the hidden pattern..."></textarea>
+                        <small>How will you translate this into a web experiment? What will participants actually do?</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label for="key-variables">Key Variables to Measure:</label>
+                        <textarea id="key-variables" placeholder="e.g., Reaction time, accuracy, choice patterns, number of trials to learn, confidence ratings..."></textarea>
+                        <small>What data will you collect to test your research question? Think about both behavioral measures and potential insights.</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label for="personal-interest">Why This Study Interests You:</label>
+                        <textarea id="personal-interest" placeholder="e.g., I'm fascinated by how people can learn without realizing it. This study challenges the idea that all learning is conscious and deliberate..."></textarea>
+                        <small>What draws you to this research? What implications excite you? This helps make the study truly yours.</small>
+                    </div>
+
+                    <div class="config-group">
+                        <label for="research-predictions">Your Predictions & Hypotheses:</label>
+                        <textarea id="research-predictions" placeholder="e.g., Since I'll be testing fellow university students rather than the original study's participants, I expect faster learning rates due to higher cognitive flexibility. My participants will likely be friends and classmates, which might reduce anxiety and lead to more risk-taking behavior. I'm also considering modifying the original design by adding confidence ratings after each trial, which might reveal metacognitive awareness that wasn't captured in the original study. I predict that unlike the original findings, my participants might show more strategic thinking because they're digital natives who are used to gaming AI systems..."></textarea>
+                        <small>Consider your likely participants (university students, friends, family, etc.) and how this might bias your results compared to the original study. Do you expect different outcomes? Are you planning any modifications to the original design? Document your intuitions and reasoning.</small>
+                    </div>
+                </div>
+
+                <button id="save-study-btn" class="primary-btn">💾 Save & Download Reference</button>
+                <div id="form-status" class="status-message" style="display: none;"></div>
+                
+                <div id="post-save-suggestions" class="step-box" style="display: none; margin-top: 20px; background-color: #f8f9fa; border-left: 4px solid #28a745;">
+                    <h4>🤖 Next: Improve Your Study Reference</h4>
+                    <p>Now that you've saved your initial study reference, consider using an LLM (such as through Cursor) to collaboratively improve and expand your document. You can:</p>
+                    <ul>
+                        <li><strong>Deepen your research questions</strong> - Ask the AI to help you identify related studies or theoretical frameworks</li>
+                        <li><strong>Refine your hypotheses</strong> - Collaborate to make your predictions more specific and testable</li>
+                        <li><strong>Explore methodological details</strong> - Get suggestions for improving your experimental design</li>
+                        <li><strong>Consider alternative perspectives</strong> - Ask what factors you might have overlooked</li>
+                    </ul>
+                    <p><em>The goal is to make this study truly yours through thoughtful engagement with the research.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>⚙️ Choose Your Tech Stack</h3>
+            <p>For this tutorial, we will focus on building experiments that run in any modern web browser. This approach is accessible, easy to share, and can be hosted for free.</p>
+            
+            <div class="tech-choice-box">
+                <h4>Option A: Web Experiments (HTML, CSS, JavaScript)</h4>
+                <p>✓ Experiments run in any browser, are easy to share, and can be hosted for free on GitHub Pages. <strong>This is the path we will follow.</strong></p>
+            </div>
+
+            <div class="tech-choice-box disabled">
+                <h4>Option B: Python & Quarto</h4>
+                <p>A powerful environment for creating reproducible research documents that combine code, analysis, and text. <em>(Tutorial for this option coming soon).</em></p>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>✅ Step 0 Checklist</h3>
+            <div class="checklist">
+                <label><input type="checkbox" id="check-research"> <strong>Deep Research Complete</strong> - Explored psychology experiments using your preferred method</label>
+                <label><input type="checkbox" id="check-study"> <strong>Study Chosen</strong> - Found an interesting study to inspire your work</label>
+                <label><input type="checkbox" id="check-documentation"> <strong>Study Documented</strong> - Created a markdown file with study details in your repository</label>
+                <label><input type="checkbox" id="check-details"> <strong>Planning Details Saved</strong> - Captured key information about your chosen study and implementation approach</label>
+                <label><input type="checkbox" id="check-save-study"> <strong>Saved Study Reference</strong> - Downloaded your `my-study-reference.md` file</label>
+                <label><input type="checkbox" id="check-tech-stack"> <strong>Confirmed Tech Stack</strong> - Understood focus on web technologies</label>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="../../index.html" class="nav-btn secondary">← Back to Overview</a>
+            <a href="#" class="nav-btn primary disabled" id="next-step-btn">Next: Environment Setup →</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 0 of 7 - Research & Planning Complete</p>
+        </div>
+    </div>
+    
+    <script src="../../shared/progress-component.js"></script>
+    <script src="step0-planning.js"></script>
+</body>
+</html> 

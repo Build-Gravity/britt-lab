@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 2: Repository Setup</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <script>
+        window.currentStep = 2;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Step 2: Repository Setup</h1>
+        <p class="subtitle">Fork the project and enable GitHub Pages</p>
+
+        <div id="progress-container"></div>
+
+        <div class="info-section">
+            <h3>🎯 What You'll Accomplish</h3>
+            <p>By the end of this step, you'll have your own copy of the experiment framework deployed as a live website that anyone can visit. This gives you a foundation to build and test your own psychology experiments.</p>
+        </div>
+
+        <div class="checklist-section">
+            <h3>📋 Prerequisites</h3>
+            <div class="checklist">
+                <label><input type="checkbox"> GitHub account created and verified</label>
+                <label><input type="checkbox"> Code editor installed (Cursor or VS Code)</label>
+                <label><input type="checkbox"> Git configured with your name and email</label>
+            </div>
+            <p><em>If you haven't completed these, go back to <a href="../option-a-step1/index.html">Step 1</a>.</em></p>
+        </div>
+
+        <div class="setup-section">
+            <h3>🔧 Setup Instructions</h3>
+            
+            <div class="step-box">
+                <h4>1. Fork This Repository</h4>
+                <ol>
+                    <li>Go to the original repository (ask your instructor for the URL)</li>
+                    <li>Click the <strong>"Fork"</strong> button in the top right</li>
+                    <li>Choose your GitHub account as the destination</li>
+                    <li>Keep the default repository name or choose your own</li>
+                    <li>Click <strong>"Create fork"</strong></li>
+                </ol>
+                <div class="tip">💡 <strong>What's a fork?</strong> A fork creates your own copy of the project that you can modify without affecting the original.</div>
+            </div>
+
+            <div class="step-box">
+                <h4>2. Enable GitHub Pages</h4>
+                <ol>
+                    <li>In your forked repository, click <strong>"Settings"</strong> (in the top menu)</li>
+                    <li>Scroll down to <strong>"Pages"</strong> in the left sidebar</li>
+                    <li>Under "Source", select <strong>"Deploy from a branch"</strong></li>
+                    <li>Choose <strong>"main"</strong> branch and <strong>"/ (root)"</strong> folder</li>
+                    <li>Click <strong>"Save"</strong></li>
+                </ol>
+                <div class="tip">⏱️ GitHub Pages takes 1-5 minutes to build. You'll get a green checkmark when it's ready.</div>
+            </div>
+
+            <div class="step-box">
+                <h4>3. Clone to Your Computer</h4>
+                <p>To edit the code locally:</p>
+                <ol>
+                    <li>Click the green <strong>"Code"</strong> button in your repository</li>
+                    <li>Copy the HTTPS URL</li>
+                    <li>Open your terminal/command prompt</li>
+                    <li>Navigate to where you want the project folder</li>
+                    <li>Run: <code>git clone [YOUR-URL]</code></li>
+                    <li>Open the folder in your code editor</li>
+                </ol>
+            </div>
+
+            <div class="step-box">
+                <h4>4. Find Your Website URL</h4>
+                <p>Build your GitHub Pages URL using your information:</p>
+                
+                <div class="config-form">
+                    <div class="form-group">
+                        <label for="github-username">Your GitHub Username:</label>
+                        <input type="text" id="github-username" placeholder="e.g., john-doe" oninput="updateWebsiteURL()">
+                    </div>
+                    <div class="form-group">
+                        <label for="repo-name">Your Repository Name:</label>
+                        <input type="text" id="repo-name" placeholder="e.g., psychology-experiments" oninput="updateWebsiteURL()">
+                    </div>
+                    <div class="form-group">
+                        <label>Your Website URL:</label>
+                        <div class="code-block">
+                            <code id="generated-url">https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/</code>
+                        </div>
+                        <button class="primary-btn" onclick="openWebsite()" id="open-website-btn" disabled>Open Website</button>
+                    </div>
+                </div>
+
+                <p><strong>Opening Locally:</strong></p>
+                <p>To view your project locally while developing:</p>
+                <ol>
+                    <li>Navigate to your cloned project folder</li>
+                    <li>Double-click on <code>index.html</code> to open it in your browser</li>
+                    <li>Or right-click → "Open with" → choose your browser</li>
+                    <li>The URL will look like: <code>file:///path/to/your/project/index.html</code></li>
+                </ol>
+                <div class="tip">💡 <strong>Local vs GitHub Pages:</strong> Local files let you test changes instantly, while GitHub Pages shows your live website to the world.</div>
+            </div>
+        </div>
+
+        <div class="next-step-section">
+            <h3>🚀 Ready for Step 3: Build Your Experiment</h3>
+            <p>Once your GitHub Pages site is deployed, it's time to create your own experiment!</p>
+            
+            <div class="step-box">
+                <h4>Quick Test:</h4>
+                <ol>
+                    <li>Visit your GitHub Pages URL to confirm it loads</li>
+                    <li>Navigate to Step 3 and try our Rock-Paper-Scissors demo</li>
+                    <li>Open browser developer tools (F12 → Console tab)</li>
+                    <li>Watch the console output when you click buttons</li>
+                </ol>
+            </div>
+
+            <div class="tip">
+                🎯 <strong>What's Next:</strong> In Step 3, you'll see how our demo works, then create your own experiment folder and build your first interactive psychology experiment. You'll work locally on your computer while testing the concepts we demonstrate.
+            </div>
+        </div>
+
+        <div class="troubleshooting-section">
+            <h3>🔧 Troubleshooting</h3>
+            <div class="step-box">
+                <h4>Site not loading?</h4>
+                <ul>
+                    <li>Wait 5-10 minutes - GitHub Pages can be slow to build</li>
+                    <li>Check the "Actions" tab in your repo for build status</li>
+                    <li>Make sure you selected "main" branch and "/ (root)" folder</li>
+                </ul>
+            </div>
+            
+            <div class="step-box">
+                <h4>404 error?</h4>
+                <ul>
+                    <li>Double-check your URL spelling</li>
+                    <li>Make sure the repository is public (not private)</li>
+                    <li>Try adding <code>/index.html</code> to the end of your URL</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="../option-a-step1/index.html" class="nav-btn secondary">← Step 1: Environment Setup</a>
+            <a href="../option-a-step3/index.html" class="nav-btn primary">Next: Build Your First Experiment →</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 2 of 7 - Repository Setup Complete</p>
+        </div>
+    </div>
+    <script src="../../shared/progress-component.js"></script>
+    <script>
+        function updateWebsiteURL() {
+            const username = document.getElementById('github-username').value.trim();
+            const repoName = document.getElementById('repo-name').value.trim();
+            const urlElement = document.getElementById('generated-url');
+            const openBtn = document.getElementById('open-website-btn');
+            
+            if (username && repoName) {
+                const url = `https://${username}.github.io/${repoName}/`;
+                urlElement.textContent = url;
+                openBtn.disabled = false;
+            } else {
+                urlElement.textContent = 'https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/';
+                openBtn.disabled = true;
+            }
+        }
+        
+        function openWebsite() {
+            const url = document.getElementById('generated-url').textContent;
+            if (url && !url.includes('YOUR-USERNAME')) {
+                window.open(url, '_blank');
+            }
+        }
+    </script>
+</body>
+</html> 

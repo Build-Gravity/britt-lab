@@ -4,6 +4,4 @@ globs:
 alwaysApply: true
 ---
 Have a lower threshold for asking questions of the user than normal - consider challenging or clarifying things a bit more frequently. 
-We are currently building the instructions as an instructor and for future reference - leave our work as an example in [instructions.md](mdc:Mock Project/instructions.md), but make sure the step-by-step instructions remain.
-
-Put CSS in CSS files instead of in the html documents
+Put CSS in a CSS file in the root directory and use that file project wide
