@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 4 Data Guide: How This Example Saves Data</title>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💾 How The Rock-Paper-Scissors Example Saves Your Data</h1>
+            <p><strong>Goal:</strong> Understand exactly how this Step 4 demo uses <strong>localStorage</strong> to collect and save data right in your browser.</p>
+            <a href="index.html" class="nav-btn secondary">← Back to Step 4</a>
+        </div>
+
+        <div class="info-section">
+            <h3>What is Browser Storage (localStorage)?</h3>
+            <p>Imagine your web browser has a small, private filing cabinet for each website you visit. <strong>localStorage</strong> is the name for this filing cabinet. It lets our experiment save information directly on your computer. This is great because the data stays on your machine, it's private, and it persists even if you refresh the page or close the browser.</p>
+            <p>This is different from saving to a server, which involves sending your data over the internet to a remote computer. For this tutorial, we are keeping everything local and simple.</p>
+        </div>
+
+        <div class="step-section">
+            <h3>🛠️ How Our Code Saves Data: A Step-by-Step Breakdown</h3>
+            
+            <div class="step-box">
+                <h4>Step 1: Create an Empty "List" to Hold Data</h4>
+                <p>First, our code creates an empty container to hold all the data we collect. In JavaScript, this is called an <strong>array</strong>, which is just a fancy word for a list. We give it a descriptive name, `experimentData`.</p>
+                <div class="code-block">
+<code>// Global state: Create an empty list to store all our trial data
+let experimentData = [];
+let trialCount = 0; // Also create a counter to keep track of trials
+</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>Step 2: Define What Data to Save on Each Click</h4>
+                <p>Next, inside the `logChoice` function, we define exactly what information to capture every time you click a button (Rock, Paper, or Scissors). We create a small data "packet" (called an object in JavaScript) that includes the trial number, a timestamp, and your choice.</p>
+                <div class="code-block">
+<code>function logChoice(choice) {
+    trialCount++; // Increment the trial counter
+
+    // Create a "packet" of data for this specific trial
+    const trialData = {
+        trial: trialCount,
+        timestamp: new Date().toISOString(), // Record the exact time
+        playerChoice: choice,
+        step: 4, // Note which step this data is from
+        status: 'localStorage_collection' // Note the data collection method
+    };
+    
+    // Add this new data packet to our main list
+    experimentData.push(trialData);
+    
+    // Immediately save the entire updated list to the browser's storage
+    saveData();
+    
+    // Update the status message on the screen
+    updateStatus(choice);
+}</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>Step 3: Save the Data into the Browser's "Filing Cabinet"</h4>
+                <p>The `saveData` function takes our `experimentData` list, converts it into a special text format called JSON, and saves it to `localStorage` with a unique key, `rpsExperimentData`.</p>
+                <div class="code-block">
+<code>function saveData() {
+    // The browser can only store text, so we convert our data list to a string
+    // JSON.stringify is the standard way to do this
+    localStorage.setItem('rpsExperimentData', JSON.stringify(experimentData));
+}</code>
+                </div>
+            </div>
+            
+            <div class="step-box">
+                <h4>Step 4: Load Existing Data When the Page Opens</h4>
+                <p>When you first open or refresh the page, the `loadData` function checks the browser's "filing cabinet" to see if any data already exists from a previous session. If it does, it loads it back into our `experimentData` list.</p>
+                <div class="code-block">
+<code>function loadData() {
+    // Look for our data in the browser's storage
+    const savedData = localStorage.getItem('rpsExperimentData');
+    
+    // If we found something...
+    if (savedData) {
+        // ...convert it from a text string back into a usable JavaScript list
+        experimentData = JSON.parse(savedData);
+        // And update our trial counter to match
+        trialCount = experimentData.length;
+    }
+}</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>Step 5: Putting It All Together at Page Load</h4>
+                <p>To make all this happen automatically, we use a special event listener that runs code as soon as the page has finished loading. This single block of code kicks everything off in the right order.</p>
+                <div class="code-block">
+<code>// When the HTML document is fully loaded and ready...
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Check for and load any data from previous sessions
+    loadData();
+    
+    // 2. Update the status message based on what was (or wasn't) loaded
+    updateStatus();
+    
+    // 3. Log helpful messages to the developer console
+    console.log('🚀 Step 4: Data collection experiment loaded');
+    if (experimentData.length > 0) {
+        console.log(`📁 Found ${experimentData.length} existing trials`);
+    } else {
+        console.log('📝 No existing data - ready for new session');
+    }
+});</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>Step 6: Create Download Buttons to Export Your Data</h4>
+                <p>Once you've collected data, you need a way to get it out of the browser. The process involves converting your data list into text and creating a temporary download link.</p>
+                <div class="code-block">
+                    <code>
+// Function to download data as a JSON file (great for code)
+function downloadJSON() {
+    // First, convert your data list into a nicely formatted text string
+    const dataStr = JSON.stringify(experimentData, null, 2);
+    
+    // Create a 'Blob', which is a file-like object for the browser
+    const dataBlob = new Blob([dataStr], {type: "application/json"});
+    
+    // Create a temporary, invisible URL that points to our data blob
+    const url = URL.createObjectURL(dataBlob);
+    
+    // Create an invisible link element
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = "rps-data.json"; // Set the desired filename
+    
+    // Programmatically click the link to trigger the browser's download dialog
+    link.click();
+}
+
+// Function to download data as a CSV file (great for spreadsheets)
+function downloadCSV() {
+    // Define the column headers for your file
+    const headers = "trial,timestamp,playerChoice,step,status";
+    
+    // Convert each data object in your list into a single line of text
+    const rows = experimentData.map(d => `${d.trial},${d.timestamp},${d.playerChoice},${d.step},${d.status}`);
+    
+    // Join the headers and all the rows into one big string
+    const csvContent = [headers, ...rows].join("\n");
+    
+    const dataBlob = new Blob([csvContent], {type: "text/csv"});
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = "rps-data.csv";
+    link.click();
+}
+                    </code>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>Want to see the full code?</h3>
+            <p>You can see all of these functions working together in the <code>step4-experiment.js</code> file in your code editor. Reading the actual file is a great way to understand how all the pieces connect.</p>
+        </div>
+
+        <div class="info-section callout">
+            <h3>Next Level: Managing Experiment Settings</h3>
+            <p>In this step, we used <code>localStorage</code> to <strong>collect data</strong>. In Step 5, we'll take this a step further and use the same browser storage to <strong>manage complex experiment configurations</strong>. You'll see how to save and load different settings for your AI opponents, which is a powerful way to design more advanced studies.</p>
+            <a href="../option-a-step5/advanced-config-guide.html" class="nav-btn secondary">See Advanced Configuration in Step 5 →</a>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html" class="nav-btn secondary">← Back to Step 4</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 4 Data Guide</p>
+        </div>
+    </div>
+    <script src="../../shared/code-copy-utils.js"></script>
+</body>
+</html> 

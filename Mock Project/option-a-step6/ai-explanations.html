@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Algorithms Explained - Step 6</title>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Step 6 Experiment</a>
+        
+        <h1>Understanding AI Algorithms in Rock-Paper-Scissors</h1>
+        
+        <p>This page explains the five AI algorithms used in our experiment. Understanding these helps us think about how artificial intelligence makes decisions and learns from data.</p>
+
+        <div class="algorithm-section">
+            <h2>1. Random AI - The Baseline</h2>
+            <p>The simplest AI just picks randomly every time. This gives us a <span class="highlight">baseline</span> to compare other algorithms against.</p>
+            
+            <div class="code-block">
+                <code>makeMove() {
+    const choices = ['Rock', 'Paper', 'Scissors'];
+    const randomIndex = Math.floor(Math.random() * 3);
+    return choices[randomIndex];
+}</code>
+            </div>
+            
+            <p><strong>Why it's useful:</strong> Random play is unpredictable. No strategy can consistently beat it - you'll win about 33% of the time, lose 33%, and tie 33%.</p>
+        </div>
+
+        <div class="algorithm-section">
+            <h2>2. Counter AI - Simple Memory</h2>
+            <p>This AI remembers your last move and plays the move that would beat it. It assumes you'll repeat your previous choice.</p>
+            
+            <div class="code-block">
+                <code>makeMove() {
+    // If no previous moves, play randomly
+    if (this.playerHistory.length === 0) {
+        return this.playRandom();
+    }
+
+    // Get the player's last move
+    const lastPlayerMove = this.playerHistory[this.playerHistory.length - 1];
+    
+    // Play the move that beats their last move
+    if (lastPlayerMove === 'Rock') return 'Paper';
+    if (lastPlayerMove === 'Paper') return 'Scissors';
+    if (lastPlayerMove === 'Scissors') return 'Rock';
+}</code>
+            </div>
+            
+            <p><strong>Strategy insight:</strong> This works well against players who repeat moves or get stuck in patterns. However, once you realize what it's doing, you can easily beat it by avoiding repetition.</p>
+        </div>
+
+        <div class="algorithm-section">
+            <h2>3. Frequency Counter AI - Statistical Analysis</h2>
+            <p>This AI tracks which move you use most often and always plays the counter to that favorite move.</p>
+            
+            <div class="code-block">
+                <code>makeMove() {
+    // Track frequencies: { Rock: 5, Paper: 3, Scissors: 2 }
+    let mostFrequent = 'Rock';
+    let maxCount = this.playerFrequency.Rock;
+    
+    if (this.playerFrequency.Paper > maxCount) {
+        mostFrequent = 'Paper';
+        maxCount = this.playerFrequency.Paper;
+    }
+    if (this.playerFrequency.Scissors > maxCount) {
+        mostFrequent = 'Scissors';
+    }
+
+    // Play the move that beats their most frequent choice
+    if (mostFrequent === 'Rock') return 'Paper';
+    if (mostFrequent === 'Paper') return 'Scissors';
+    if (mostFrequent === 'Scissors') return 'Rock';
+}</code>
+            </div>
+            
+            <p><strong>Strategy insight:</strong> Most people have unconscious biases toward certain moves. This AI exploits your overall tendencies rather than short-term patterns.</p>
+        </div>
+
+        <div class="algorithm-section">
+            <h2>4. Biased Random AI - Research Replication</h2>
+            <p>This AI replicates the exact strategy from the Mohammadi Sepahvand et al. (2014) research study. It has three phases with increasing bias toward certain moves.</p>
+            
+            <div class="code-block">
+                <code>makeMove() {
+    const random = Math.random();
+    
+    if (this.moveCount <= 200) {
+        // Phase 1: Random (33% each)
+        return choices[Math.floor(Math.random() * 3)];
+    } else if (this.moveCount <= 400) {
+        // Phase 2: Light bias (50% Rock, 25% Paper, 25% Scissors)
+        if (random < 0.5) return 'Rock';
+        if (random < 0.75) return 'Paper';
+        return 'Scissors';
+    } else {
+        // Phase 3: Heavy bias (10% Rock, 80% Paper, 10% Scissors)
+        if (random < 0.1) return 'Rock';
+        if (random < 0.9) return 'Paper';
+        return 'Scissors';
+    }
+}</code>
+            </div>
+            
+            <p><strong>Research purpose:</strong> This AI was used in the original study to test how humans adapt to changing opponent strategies. The gradual bias increase tests human pattern detection abilities.</p>
+        </div>
+
+        <div class="algorithm-section">
+            <h2>5. ELPH AI - Advanced Pattern Recognition</h2>
+            <p>The most sophisticated AI, implementing the ELPH (Entropy Learned Pruned Hypothesis space) algorithm from academic research. It uses advanced mathematics to detect and exploit patterns.</p>
+            
+            <h3>How ELPH works:</h3>
+            <ol>
+                <li><strong>Short Term Memory (STM):</strong> Remembers your last few moves (configurable 1-8 moves)</li>
+                <li><strong>Hypothesis Generation:</strong> Creates all possible pattern predictions from STM</li>
+                <li><strong>Entropy Calculation:</strong> Measures how "random" each pattern is using H = -Σ p_i * log₂(p_i)</li>
+                <li><strong>Hypothesis Pruning:</strong> Removes unreliable patterns with high entropy</li>
+                <li><strong>Soft-max Selection:</strong> Probabilistically chooses the most reliable pattern</li>
+                <li><strong>Prediction & Counter:</strong> Predicts your next move and plays the counter</li>
+            </ol>
+            
+            <div class="code-block">
+                <code>// Example: Your last 3 moves were Rock-Paper-Scissors
+// ELPH generates hypotheses:
+// "Rock" → ? (from all games starting with Rock)
+// "Paper" → ? (from all games where Paper was played)
+// "Rock-Paper" → ? (from all Rock-Paper sequences)
+// "Paper-Scissors" → ? (from all Paper-Scissors sequences)
+// "Rock-Paper-Scissors" → ? (from all Rock-Paper-Scissors sequences)
+
+// It calculates entropy for each pattern:
+// "Rock-Paper" has low entropy (you always play Scissors after this)
+// "Paper" has high entropy (you play randomly after Paper)
+
+// It selects the most reliable pattern and counters your predicted move</code>
+            </div>
+            
+            <p><strong>Why it's challenging:</strong> ELPH combines the best of all strategies - it finds your patterns like Pattern AI, but uses rigorous mathematics to avoid false patterns. It's designed to be as close to optimal play as possible.</p>
+            
+            <h3>ELPH Parameters:</h3>
+            <ul>
+                <li><strong>STM Length:</strong> How many recent moves to analyze (1-8)</li>
+                <li><strong>Entropy Threshold:</strong> Maximum randomness allowed in trusted patterns (0.5-2.0)</li>
+                <li><strong>Min Observations:</strong> How much evidence needed before trusting a pattern (2-10)</li>
+                <li><strong>Hypothesis Pruning:</strong> Whether to remove unreliable patterns (On/Off)</li>
+            </ul>
+        </div>
+
+        <div class="algorithm-section">
+            <h2>Key AI Concepts</h2>
+            
+            <h3>Learning vs. Strategy Comparison</h3>
+            <ul>
+                <li><strong>Random AI:</strong> No learning, no strategy - pure baseline</li>
+                <li><strong>Counter AI:</strong> No learning, simple reactive strategy</li>
+                <li><strong>Frequency Counter AI:</strong> Simple learning, statistical strategy</li>
+                <li><strong>Biased Random AI:</strong> No learning, evolving strategy over time</li>
+                <li><strong>ELPH AI:</strong> Advanced learning, adaptive mathematical strategy</li>
+            </ul>
+            
+            <h3>Prediction and Confidence</h3>
+            <p>The advanced AIs use different confidence measures:</p>
+            <div class="code-block">
+                <code>// Frequency Counter: Only predict if enough data
+if (totalMoves >= 5) {
+    return mostFrequentMove;
+}
+
+// ELPH: Only predict if entropy is low enough
+if (patternEntropy <= entropyThreshold && observations >= minObservations) {
+    return reliablePattern;
+}</code>
+            </div>
+            <p>This prevents the AIs from making overconfident predictions based on limited or unreliable data.</p>
+            
+            <h3>Fallback Strategies</h3>
+            <p>Good AI systems have fallbacks when their primary strategy fails:</p>
+            <ul>
+                <li><strong>Counter AI:</strong> Falls back to random for first move</li>
+                <li><strong>Frequency Counter AI:</strong> Falls back to random when no clear favorite</li>
+                <li><strong>ELPH AI:</strong> Falls back to frequency analysis when no reliable patterns</li>
+            </ul>
+        </div>
+
+        <div class="algorithm-section">
+            <h2>Testing AI Intelligence</h2>
+            
+            <p>As you play against these AIs, ask yourself:</p>
+            <ul>
+                <li>Can you detect which AI you're playing against based on their behavior?</li>
+                <li>How does your strategy change once you know the AI's approach?</li>
+                <li>Which AI feels most "human-like" to play against?</li>
+                <li>How long does it take the ELPH AI to "figure you out"?</li>
+                <li>Can you exploit the Biased Random AI's phase transitions?</li>
+                <li>Does the Counter AI become predictable after a few rounds?</li>
+                <li>How does the Frequency Counter AI adapt when you change your favorite move?</li>
+            </ul>
+            
+            <h3>Experimental Questions</h3>
+            <p>These AIs enable interesting research questions:</p>
+            <ul>
+                <li><strong>Detection Time:</strong> How quickly can humans identify different AI strategies?</li>
+                <li><strong>Adaptation:</strong> Do people change their play style against different AIs?</li>
+                <li><strong>Learning Curves:</strong> Which AIs do humans learn to beat fastest?</li>
+                <li><strong>Phase Sensitivity:</strong> Do humans notice when the Biased Random AI changes phases?</li>
+                <li><strong>Pattern Breaking:</strong> Can humans successfully stay random against ELPH?</li>
+            </ul>
+            
+            <p><strong>Research note:</strong> These questions mirror real research in AI detection, human-computer interaction, and game theory. Understanding how people interact with different AI systems is crucial for designing better technology.</p>
+        </div>
+
+        <div class="algorithm-section">
+            <h2>Algorithm Complexity Progression</h2>
+            
+            <p>Our AI implementations demonstrate a clear progression from simple to sophisticated:</p>
+            
+            <h3>Basic Level (Random & Counter AI)</h3>
+            <ul>
+                <li><strong>No Learning:</strong> Fixed strategies that don't adapt</li>
+                <li><strong>Simple Logic:</strong> Easy to understand and predict</li>
+                <li><strong>Educational Value:</strong> Great for teaching basic AI concepts</li>
+            </ul>
+            
+            <h3>Intermediate Level (Frequency Counter & Biased Random AI)</h3>
+            <ul>
+                <li><strong>Statistical Analysis:</strong> Simple data collection and analysis</li>
+                <li><strong>Behavioral Modeling:</strong> Biased Random replicates research methodology</li>
+                <li><strong>Pattern Detection:</strong> Basic trend identification</li>
+            </ul>
+            
+            <h3>Advanced Level (ELPH AI)</h3>
+            <ul>
+                <li><strong>Mathematical Rigor:</strong> Entropy calculations and hypothesis testing</li>
+                <li><strong>Research Grade:</strong> Implements published academic algorithms</li>
+                <li><strong>Adaptive Learning:</strong> Continuously updates strategy based on reliability</li>
+                <li><strong>Multi-layered Decision Making:</strong> Combines multiple analytical approaches</li>
+            </ul>
+            
+            <p><strong>Real-world Connection:</strong> This progression mirrors how AI systems are built in practice - from simple rule-based systems to complex machine learning models that use statistical analysis and uncertainty quantification.</p>
+        </div>
+
+        <div class="instructor-note">
+            <h3>💡 For Instructors</h3>
+            <p>This collection demonstrates core AI concepts through interactive gameplay. Students can experience the difference between rule-based AI (Counter), statistical AI (Frequency Counter), research methodology (Biased Random), and advanced pattern recognition (ELPH). The progression from simple to sophisticated mirrors both the historical development of AI and modern machine learning pipelines.</p>
+            
+            <h4>Learning Objectives Met:</h4>
+            <ul>
+                <li><strong>AI Strategy Types:</strong> Rule-based, statistical, and adaptive systems</li>
+                <li><strong>Research Methodology:</strong> How AI is used in academic studies</li>
+                <li><strong>Pattern Recognition:</strong> From simple frequency analysis to entropy-based reliability</li>
+                <li><strong>Human-AI Interaction:</strong> How people adapt to different AI behaviors</li>
+            </ul>
+        </div>
+
+        <a href="index.html" class="back-link">← Back to Step 6 Experiment</a>
+    </div>
+    <script src="../../shared/code-copy-utils.js"></script>
+</body>
+</html> 

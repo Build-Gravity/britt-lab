@@ -30,6 +30,21 @@
             </ul>
         </div>
 
+        <div id="participant-overlay" class="participant-overlay" style="display:none;">
+            <h3>Participant Information</h3>
+            <form id="participant-form">
+                <div class="form-group">
+                    <label for="participant-name">Name (required):</label>
+                    <input type="text" id="participant-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="participant-age">Age (optional):</label>
+                    <input type="number" id="participant-age" min="0">
+                </div>
+                <button type="submit" class="primary-btn">Begin Experiment</button>
+            </form>
+        </div>
+
         <div class="step-section">
             <h3>⭐ Our Example: Rock-Paper-Scissors with an Adaptive AI</h3>
             <p>This demo features an AI opponent that learns from your choices. The AI algorithm and learning rate are loaded from your Step 5 configuration. Can you beat an AI that adapts to your strategy?</p>
@@ -121,76 +136,271 @@
         </div>
 
         <div class="step-section">
-            <h3>📚 AI Algorithms from Cognitive Research</h3>
-            <p>Our implementation uses algorithms from Mohammadi Sepahvand et al. (2014) - a study of how humans learn in sequential decision tasks:</p>
+            <h3>📚 AI Opponents for Experiments</h3>
+            <p>Our RPS example uses adaptive AI opponents whose logic is based on published cognitive science research on human learning. The key achievement in this step is implementing a version of the <strong>ELPH algorithm</strong>, from a 2014 study on sequential decision-making, as a live opponent. While its primary scientific use is for data analysis (as you'll see in Step 7), using it here makes our experiment more dynamic and psychologically interesting.</p>
             
             <div class="step-box">
-                <h4>🧠 RELPH (Reinforcement Learning)</h4>
-                <p><strong>How it works:</strong> Learns which actions are rewarding in specific contexts</p>
+                <h4>🧠 ELPH (Exploitative Learning of Pattern and Heuristics)</h4>
+                <p>This is the primary adaptive AI used in our demo. It's designed to find and exploit patterns in an opponent's behavior.</p>
                 <ul>
-                    <li><strong>Memory:</strong> Stores reward values for different action-context pairs</li>
-                    <li><strong>Learning:</strong> Updates values based on wins/losses (α parameter controls learning speed)</li>
-                    <li><strong>Decision:</strong> Chooses actions that have been most rewarding previously</li>
-                    <li><strong>Psychology:</strong> Models how humans learn from trial-and-error feedback</li>
+                    <li><strong>How it works:</strong> It tracks the history of your moves to find patterns (e.g., "Rock is often followed by Paper"). It then predicts your next move based on these statistical patterns and chooses the direct counter.</li>
+                    <li><strong>Research Parameters:</strong> Its behavior is controlled by `memoryLength` (how many past moves to consider for a pattern, typically 1-3) from your Step 5 configuration.</li>
+                    <li><strong>Psychology:</strong> This models how people learn to anticipate others' actions by recognizing their habits and tendencies.</li>
                 </ul>
             </div>
             
             <div class="step-box">
-                <h4>📊 ELPH (Statistical Learning)</h4>
-                <p><strong>How it works:</strong> Predicts what opponents will do next based on patterns</p>
+                <h4>⚙️ Other AI Models for Comparison</h4>
+                <p>To appreciate the adaptive nature of ELPH, the demo also includes several simpler AIs. You can select these in your configuration from Step 5 to see how they perform differently.</p>
                 <ul>
-                    <li><strong>Memory:</strong> Tracks sequences and what typically follows them</li>
-                    <li><strong>Learning:</strong> Updates probability estimates for different patterns</li>
-                    <li><strong>Decision:</strong> Predicts most likely next move and counters it</li>
-                    <li><strong>Psychology:</strong> Models pattern recognition and statistical learning</li>
+                    <li><strong>Random:</strong> Chooses a move completely at random.</li>
+                    <li><strong>Biased Random:</strong> Can be configured to prefer certain moves over others.</li>
+                    <li><strong>Counter:</strong> Assumes you will repeat your last move and plays the counter to it.</li>
+                    <li><strong>Frequency Counter:</strong> Plays the move that would have beaten your most frequent past choice.</li>
                 </ul>
-            </div>
-            
-            <div class="step-box">
-                <h4>⚙️ Research Parameters</h4>
-                <ul>
-                    <li><strong>α (Learning Rate):</strong> 0.1-0.7 - how quickly the AI adapts to new information</li>
-                    <li><strong>n (Memory Length):</strong> 1-3 - how many previous moves the AI considers</li>
-                    <li><strong>Exploration vs Exploitation:</strong> Balance between trying new strategies vs using proven ones</li>
-                </ul>
+                <p class="text-meta">For more technical details on the algorithms, you can review the <a href="./ai-explanations.html" target="_blank">AI algorithm implementation notes</a> or inspect the code files directly, like <code>elph-ai.js</code>.</p>
             </div>
         </div>
 
         <div class="step-section">
-            <h3>🏗️ Build Your Own Interactive Elements</h3>
-            <p>Now adapt these patterns for your experiment from Step 0. The RPS example demonstrates the basic structure - here's how to modify it:</p>
+            <h3>🏗️ Putting It All Together: Your Experiment Logic</h3>
+            <p>This is where you combine the concepts from the previous steps to build the core of your own interactive experiment. The structure involves three main parts: loading your configuration (Step 5), handling participant input (from your UI in Step 3), and recording the data (in the format from Step 4).</p>
+            <p>The following sections break down the template for your own <code>experiment.js</code> file into logical pieces.</p>
             
             <div class="step-box">
-                <h4>🎯 Adapting the Simple Experiment Flow</h4>
-                <p>The <strong>step6-experiment.js</strong> file shows the basic patterns you can modify:</p>
-                <ul>
-                    <li><strong>Choice Recording:</strong> Change <code>makeChoice(choice)</code> to capture your experiment's response types</li>
-                    <li><strong>Game Logic:</strong> Replace <code>determineWinner()</code> with your task's success/failure logic</li>
-                    <li><strong>Data Recording:</strong> Modify <code>recordTrialData()</code> to capture your experiment's variables</li>
-                    <li><strong>UI Updates:</strong> Adapt <code>showResults()</code> to display your experiment's feedback</li>
-                </ul>
+                <h4>Part 1: Initializing the Experiment</h4>
+                <p>First, you need to set up the "memory" for your experiment. This code creates variables to keep track of the experiment's current state (like the trial number) and to hold the settings you load from your Step 5 configuration.</p>
+                <div class="code-block" data-copy-text="
+// Holds the dynamic state of the experiment (e.g., current trial number, score).
+let experimentState = {
+    currentTrial: 0,
+    totalTrials: 30, // Default value, will be overwritten by config
+    data: [] // Holds all trial data, mirroring Step 4.
+};
+
+// Holds the static configuration loaded from Step 5.
+let experimentConfig = {};
+
+// Function to load settings from localStorage.
+function loadExperimentConfig() {
+    const savedConfig = localStorage.getItem('experimentConfig'); // Use the key from Step 5
+    if (savedConfig) {
+        experimentConfig = JSON.parse(savedConfig);
+        experimentState.totalTrials = experimentConfig.numTrials;
+        console.log('📝 Configuration loaded:', experimentConfig);
+    } else {
+        console.log('No configuration found. Using defaults.');
+    }
+}
+                ">
+                    <code>
+// Holds the dynamic state of the experiment (e.g., current trial number, score).
+let experimentState = {
+    currentTrial: 0,
+    totalTrials: 30, // Default value, will be overwritten by config
+    data: [] // Holds all trial data, mirroring Step 4.
+};
+
+// Holds the static configuration loaded from Step 5.
+let experimentConfig = {};
+
+// Function to load settings from localStorage.
+function loadExperimentConfig() {
+    const savedConfig = localStorage.getItem('experimentConfig'); // Use the key from Step 5
+    if (savedConfig) {
+        experimentConfig = JSON.parse(savedConfig);
+        experimentState.totalTrials = experimentConfig.numTrials;
+        console.log('📝 Configuration loaded:', experimentConfig);
+    } else {
+        console.log('No configuration found. Using defaults.');
+    }
+}
+                    </code>
+                </div>
             </div>
-            
+
             <div class="step-box">
-                <h4>🤖 Using the AI Algorithms</h4>
-                <p>The <strong>step6-ai-algorithms.js</strong> file provides ready-to-use algorithms for adaptive behavior:</p>
-                <ul>
-                    <li><strong>Adaptive Difficulty:</strong> Use RELPH to adjust challenge based on performance</li>
-                    <li><strong>Pattern Recognition:</strong> Use ELPH to detect and respond to participant strategies</li>
-                    <li><strong>Control Condition:</strong> Use Random for baseline comparisons</li>
-                    <li><strong>Simple Interface:</strong> All algorithms use the same <code>makeMove()</code> and <code>learn()</code> functions</li>
-                </ul>
+                <h4>Part 2: The Core Trial Logic</h4>
+                <p>This is the heart of your experiment. The <code>runTrial</code> function runs every time the participant does something, like clicking a button. Inside, it calls helper functions to get the computer's action, determine the outcome, and record the data before checking if the experiment should end.</p>
+                <div class="code-block" data-copy-text="
+// This function runs once per trial (e.g., each time the participant clicks a button).
+function runTrial(participantResponse) {
+    // Get the computer's action for this trial (e.g., show an image, play a sound).
+    const computerAction = getComputerAction();
+
+    // Determine the outcome based on your experiment's rules.
+    const result = determineOutcome(participantResponse, computerAction);
+
+    // Record all data for this trial in a structured object.
+    const trialData = {
+        trial: experimentState.currentTrial,
+        participantAction: participantResponse,
+        computerAction: computerAction,
+        outcome: result,
+        timestamp: new Date().toISOString()
+    };
+    experimentState.data.push(trialData);
+    console.log(`Trial ${experimentState.currentTrial}:`, trialData);
+
+    // Update the UI to give the participant feedback.
+    updateUIAfterTrial(result);
+
+    // Check if the experiment is over.
+    experimentState.currentTrial++;
+    if (experimentState.currentTrial >= experimentState.totalTrials) {
+        endExperiment();
+    }
+}
+
+// This function determines what the computer does. It can be simple (show an image)
+// or complex (have an AI make a strategic decision).
+function getComputerAction() {
+    // This is a placeholder. You will customize this for your experiment.
+    // For example, you might return a value from your config file.
+    return 'some_computer_action';
+}
+                ">
+                    <code>
+// This function runs once per trial (e.g., each time the participant clicks a button).
+function runTrial(participantResponse) {
+    // Get the computer's action for this trial (e.g., show an image, play a sound).
+    const computerAction = getComputerAction();
+
+    // Determine the outcome based on your experiment's rules.
+    const result = determineOutcome(participantResponse, computerAction);
+
+    // Record all data for this trial in a structured object.
+    const trialData = {
+        trial: experimentState.currentTrial,
+        participantAction: participantResponse,
+        computerAction: computerAction,
+        outcome: result,
+        timestamp: new Date().toISOString()
+    };
+    experimentState.data.push(trialData);
+    console.log(`Trial ${experimentState.currentTrial}:`, trialData);
+
+    // Update the UI to give the participant feedback.
+    updateUIAfterTrial(result);
+
+    // Check if the experiment is over.
+    experimentState.currentTrial++;
+    if (experimentState.currentTrial >= experimentState.totalTrials) {
+        endExperiment();
+    }
+}
+
+// This function determines what the computer does. It can be simple (show an image)
+// or complex (have an AI make a strategic decision).
+function getComputerAction() {
+    // This is a placeholder. You will customize this for your experiment.
+    // For example, you might return a value from your config file.
+    return 'some_computer_action';
+}
+                    </code>
+                </div>
             </div>
-            
+
             <div class="step-box">
-                <h4>🎮 Common Adaptations</h4>
-                <p>Examples of how to adapt the RPS pattern for different experiments:</p>
+                <h4>Part 3: Connecting the UI and Starting the Experiment</h4>
+                <p>This is the "glue" code. It defines placeholder functions for interacting with your HTML, like updating text or listening for button clicks. Finally, it kicks everything off by loading the configuration and setting up those listeners when the page loads.</p>
+                 <div class="code-block" data-copy-text="
+// --- Helper Functions (connect to your HTML) ---
+
+function determineOutcome(participantAction, computerAction) {
+    // TODO: Implement your experiment's logic here.
+    // For example, check if an answer is correct.
+    return 'some_outcome'; // Placeholder
+}
+
+function updateUIAfterTrial(result) {
+    // TODO: Update your HTML to show feedback.
+    // e.g., document.getElementById('feedback').textContent = `The result was: ${result}`;
+}
+
+function setupUIListeners() {
+    // TODO: Add event listeners to your buttons or other interactive elements.
+    // e.g., document.getElementById('my-button').addEventListener('click', () => runTrial('button_clicked'));
+}
+
+function endExperiment() {
+    // Hide the experiment UI, show a 'thank you' message, and save the data.
+    console.log('Experiment complete.');
+    saveData();
+}
+
+function saveData() {
+    // Save the final data array to localStorage, just like in Step 4.
+    localStorage.setItem('experimentData', JSON.stringify(experimentState.data));
+    console.log('Data saved!', experimentState.data);
+}
+
+// --- Start the Experiment ---
+// This is the entry point that kicks everything off when the page loads.
+loadExperimentConfig();
+setupUIListeners();
+                ">
+                    <code>
+// --- Helper Functions (connect to your HTML) ---
+
+function determineOutcome(participantAction, computerAction) {
+    // TODO: Implement your experiment's logic here.
+    // For example, check if an answer is correct.
+    return 'some_outcome'; // Placeholder
+}
+
+function updateUIAfterTrial(result) {
+    // TODO: Update your HTML to show feedback.
+}
+
+function setupUIListeners() {
+    // TODO: Add event listeners to your interactive elements.
+}
+
+function endExperiment() {
+    console.log('Experiment complete.');
+    saveData();
+}
+
+function saveData() {
+    localStorage.setItem('experimentData', JSON.stringify(experimentState.data));
+    console.log('Data saved!', experimentState.data);
+}
+
+// --- Start the Experiment ---
+// This is the entry point that kicks everything off.
+loadExperimentConfig();
+setupUIListeners();
+                    </code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>🤖 Generate Your Full Experiment Script with AI</h4>
+                <p>Now that you have the three template parts in your <code>experiment.js</code> file, you can ask the AI to write the custom logic for your study. Instead of manually describing your goals, you will provide the AI with the files you have already created. This is the most powerful way to work with an AI assistant.</p>
+                <p>Make sure the following files are open in your editor, then copy the prompt below:</p>
                 <ul>
-                    <li><strong>Memory Task:</strong> AI adjusts difficulty based on accuracy - easier items after mistakes</li>
-                    <li><strong>Attention Task:</strong> AI varies signal timing based on response speed patterns</li>
-                    <li><strong>Decision Task:</strong> AI provides feedback that adapts to participant confidence levels</li>
-                    <li><strong>Learning Task:</strong> AI schedules practice items based on forgetting curve models</li>
+                    <li>Your research plan from Step 0 (e.g., <code>my-research-plan.md</code>)</li>
+                    <li>Your experiment's HTML file (e.g., <code>index.html</code>)</li>
+                    <li>Your <code>experiment.js</code> file containing the templates from this step.</li>
                 </ul>
+                <div class="formatted-prompt">
+                    <div class="prompt-header">
+                        <span class="prompt-title">AI Prompt: Complete Experiment Script</span>
+                        <button class="prompt-copy-btn" onclick="copyPrompt('complete-script-prompt')" title="Copy prompt text">Copy</button>
+                    </div>
+                    <div class="prompt-content" id="complete-script-prompt">
+                        <p>I am building a browser-based psychology experiment. Please complete the script in my open <code>experiment.js</code> file, which currently contains the three-part template from the Step 6 instructions.</p>
+                        <p>Use the following files for context:</p>
+                        <ul>
+                            <li>My research plan, which outlines the study's goal, the participant's task, and what defines an outcome, is in @[your-research-plan.md].</li>
+                            <li>My UI, including the necessary HTML elements, is defined in @[your-index.html].</li>
+                            <li>My experimental parameters from Step 5 are loaded into the <code>experimentConfig</code> object in the script itself.</li>
+                        </ul>
+                        <p>Based on the context from these files, please implement the placeholder functions (<code>getComputerAction</code>, <code>determineOutcome</code>, <code>updateUIAfterTrial</code>, and <code>setupUIListeners</code>) to create a complete, working experiment.</p>
+                        <p>Return only the complete, updated JavaScript code for my <code>experiment.js</code> file.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -229,80 +439,11 @@
         <div class="step-section">
             <h3>✅ Step 6 Checklist</h3>
             <div class="checklist">
-                <label><input type="checkbox" id="check-ai-design"> <strong>Designed Interactive Elements</strong> - Used AI to plan components for your experiment</label>
-                <label><input type="checkbox" id="check-algorithm"> <strong>Chose Algorithm Approach</strong> - Selected reinforcement learning, pattern recognition, or adaptive difficulty</label>
-                <label><input type="checkbox" id="check-implementation"> <strong>Implemented Interactive Code</strong> - Built functional interactive elements for your experiment</label>
-                <label><input type="checkbox" id="check-rps-demo"> <strong>Explored RPS Algorithms</strong> - Tested different AI approaches in the demonstration</label>
-                <label><input type="checkbox" id="check-integration"> <strong>Configuration Integration</strong> - Connected Step 5 parameters to interactive behavior</label>
-            </div>
-        </div>
-
-        <div class="step-section">
-            <h3>📚 Code Structure - Simple & Adaptable</h3>
-            <p>The code is organized to separate complex AI algorithms from simple experiment patterns you can easily adapt:</p>
-            
-            <div class="step-box">
-                <h4>🤖 AI Algorithms File (step6-ai-algorithms.js)</h4>
-                <p><strong>Research-Quality Algorithms:</strong> Contains sophisticated AI that you can use without understanding the complex implementation:</p>
-                <div class="code-block">
-                    <code>// Simple interface to complex algorithms
-const aiAgent = createAIAgent('relph', 0.3, 2);
-const aiChoice = aiAgent.makeMove(playerHistory);
-aiAgent.learn(playerChoice, aiChoice, result);</code>
-                </div>
-                <p><strong>Three Algorithm Options:</strong> RELPH (reinforcement learning), ELPH (pattern prediction), or Random (control condition)</p>
-            </div>
-            
-            <div class="step-box">
-                <h4>⚙️ Experiment File (step6-experiment.js)</h4>
-                <p><strong>Simple Patterns You Can Adapt:</strong> Basic experiment mechanics that are easy to modify for your own study:</p>
-                <div class="code-block">
-                    <code>// Easy-to-adapt experiment patterns
-function makeChoice(choice) {
-    // 1. Record participant choice
-    const playerChoice = choice;
-    gameState.playerHistory.push(playerChoice);
-    
-    // 2. Get AI response (complex algorithms in separate file)
-    const aiChoice = gameState.aiAgent.makeMove(gameState.playerHistory);
-    
-    // 3. Simple game logic you can adapt
-    const result = determineWinner(playerChoice, aiChoice);
-    updateScores(result);
-    
-    // 4. Record data and update UI
-    recordTrialData(playerChoice, aiChoice, result);
-    showChoices(playerChoice, aiChoice, result);
-}</code>
-                </div>
-                <p><strong>Key Insight:</strong> The complex AI algorithms are handled separately, so you can focus on adapting the simple experiment flow for your own research.</p>
-            </div>
-        </div>
-
-        <div class="step-section">
-            <h3>🤖 AI-Assisted Interactive Design</h3>
-            <p>Use AI assistants to help design and implement interactive elements for your experiment:</p>
-            
-            <div class="step-box">
-                <h4>💡 Design Your Interactive Elements</h4>
-                <p>Generate ideas for adaptive behavior in your experiment:</p>
-                <div class="action-buttons">
-                    <button onclick="copyInteractivePrompt()" class="btn secondary">Copy Interactive Design Prompt</button>
-                </div>
-                <div class="prompt-preview">
-                    <p><em>I'm building interactive elements for my [EXPERIMENT TYPE] study from Step 0: [YOUR STUDY DESCRIPTION]. I need help implementing [adaptive difficulty/AI opponent/dynamic feedback] that [learns from participant behavior/adapts to performance]. Can you help me design the algorithm?</em></p>
-                </div>
-            </div>
-            
-            <div class="step-box">
-                <h4>⚙️ Implement Your Interactive Code</h4>
-                <p>Get help adapting the experiment patterns for your specific study:</p>
-                <div class="action-buttons">
-                    <button onclick="copyImplementationPrompt()" class="btn secondary">Copy Implementation Prompt</button>
-                </div>
-                <div class="prompt-preview">
-                    <p><em>I want to add interactive elements to my psychology experiment. Based on my JSON configuration from Step 5: [PASTE CONFIG] Help me implement [SPECIFIC INTERACTIVE ELEMENT] that adapts to participant behavior using JavaScript.</em></p>
-                </div>
+                <label><input type="checkbox" id="check-ai-design"> <strong>Designed Interactive Logic</strong> - Planned the core `runTrial` loop for your experiment.</label>
+                <label><input type="checkbox" id="check-algorithm"> <strong>Connected Configuration</strong> - Loaded parameters from your Step 5 config file.</label>
+                <label><input type="checkbox" id="check-implementation"> <strong>Implemented Core Logic</strong> - Wrote the JavaScript functions for `runTrial`, `getComputerAction`, and data recording.</label>
+                <label><input type="checkbox" id="check-rps-demo"> <strong>Explored RPS Demo</strong> - Tested different AI approaches in the demonstration to understand how they work.</label>
+                <label><input type="checkbox" id="check-integration"> <strong>Integrated UI</strong> - Connected your experiment logic to your HTML elements using event listeners.</label>
             </div>
         </div>
 
@@ -317,7 +458,12 @@ function makeChoice(choice) {
     </div>
 
     <script src="../../shared/progress-component.js"></script>
-    <script src="step6-ai-algorithms.js"></script>
+    <script src="../../shared/code-copy-utils.js"></script>
+    <script src="random-ai.js"></script>
+    <script src="counter-ai.js"></script>
+    <script src="biased-random-ai.js"></script>
+    <script src="frequency-counter-ai.js"></script>
+    <script src="elph-ai.js"></script>
     <script src="step6-experiment.js"></script>
 </body>
 </html> 

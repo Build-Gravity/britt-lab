@@ -37,7 +37,7 @@
             <div class="step-box">
                 <h4>1. Fork This Repository</h4>
                 <ol>
-                    <li>Go to the original repository (ask your instructor for the URL)</li>
+                    <li>Go to the original repository: <a href="https://github.com/Build-Gravity/britt-lab" target="_blank">https://github.com/Build-Gravity/britt-lab</a></li>
                     <li>Click the <strong>"Fork"</strong> button in the top right</li>
                     <li>Choose your GitHub account as the destination</li>
                     <li>Keep the default repository name or choose your own</li>
@@ -55,7 +55,7 @@
                     <li>Choose <strong>"main"</strong> branch and <strong>"/ (root)"</strong> folder</li>
                     <li>Click <strong>"Save"</strong></li>
                 </ol>
-                <div class="tip">⏱️ GitHub Pages takes 1-5 minutes to build. You'll get a green checkmark when it's ready.</div>
+                <div class="tip">⏱️ GitHub Pages takes 1-5 minutes to build. You'll get a green checkmark when it's ready. You can proceed to step 3 while you wait.</div>
             </div>
 
             <div class="step-box">
@@ -66,7 +66,12 @@
                     <li>Copy the HTTPS URL</li>
                     <li>Open your terminal/command prompt</li>
                     <li>Navigate to where you want the project folder</li>
-                    <li>Run: <code>git clone [YOUR-URL]</code></li>
+                    <li>Run this command (replace with your actual URL):</li>
+                </ol>
+                <div class="code-block" data-copy-text="git clone YOUR-REPO-URL-HERE">
+                    <code>git clone <span class="placeholder">YOUR-REPO-URL-HERE</span></code>
+                </div>
+                <ol start="6">
                     <li>Open the folder in your code editor</li>
                 </ol>
             </div>
@@ -74,6 +79,7 @@
             <div class="step-box">
                 <h4>4. Find Your Website URL</h4>
                 <p>Build your GitHub Pages URL using your information:</p>
+                <div class="tip">💡 <strong>Repository Name Tips:</strong> Avoid spaces and special characters in repository names. If you use spaces, we'll automatically convert them to hyphens for your URL.</div>
                 
                 <div class="config-form">
                     <div class="form-group">
@@ -86,9 +92,10 @@
                     </div>
                     <div class="form-group">
                         <label>Your Website URL:</label>
-                        <div class="code-block">
+                        <div class="code-block" id="url-container">
                             <code id="generated-url">https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/</code>
                         </div>
+                        <div id="url-message" class="status-message" style="display: none;"></div>
                         <button class="primary-btn" onclick="openWebsite()" id="open-website-btn" disabled>Open Website</button>
                     </div>
                 </div>
@@ -155,19 +162,48 @@
         </div>
     </div>
     <script src="../../shared/progress-component.js"></script>
+    <script src="../../shared/code-copy-utils.js"></script>
     <script>
         function updateWebsiteURL() {
             const username = document.getElementById('github-username').value.trim();
             const repoName = document.getElementById('repo-name').value.trim();
             const urlElement = document.getElementById('generated-url');
             const openBtn = document.getElementById('open-website-btn');
+            const urlContainer = document.getElementById('url-container');
+            const messageElement = document.getElementById('url-message');
             
             if (username && repoName) {
-                const url = `https://${username}.github.io/${repoName}/`;
+                // Convert spaces to hyphens and remove special characters for URL-safe repo name
+                const originalRepoName = repoName;
+                const urlSafeRepoName = repoName.toLowerCase()
+                    .replace(/\s+/g, '-')  // Replace spaces with hyphens
+                    .replace(/[^a-z0-9-]/g, ''); // Remove special characters except hyphens
+                
+                const url = `https://${username}.github.io/${urlSafeRepoName}/`;
                 urlElement.textContent = url;
+                
+                // Show helpful message if we modified the repo name
+                if (originalRepoName !== urlSafeRepoName) {
+                    messageElement.textContent = `✅ Converted "${originalRepoName}" to "${urlSafeRepoName}" for URL compatibility`;
+                    messageElement.className = 'status-message success';
+                    messageElement.style.display = 'block';
+                } else {
+                    messageElement.style.display = 'none';
+                }
+                
+                // Add visual feedback - green border for valid URL
+                urlContainer.style.border = '2px solid #28a745';
+                urlContainer.style.backgroundColor = '#f8fff8';
+                
                 openBtn.disabled = false;
             } else {
                 urlElement.textContent = 'https://YOUR-USERNAME.github.io/YOUR-REPO-NAME/';
+                messageElement.style.display = 'none';
+                
+                // Reset visual feedback
+                urlContainer.style.border = '';
+                urlContainer.style.backgroundColor = '';
+                
                 openBtn.disabled = true;
             }
         }

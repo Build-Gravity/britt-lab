@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELPH Algorithm Technical Explanation</title>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Step 5</a>
+        
+        <h1>ELPH Algorithm: Technical Deep Dive</h1>
+        
+        <p><strong>ELPH (Entropy Learned Pruned Hypothesis space)</strong> is a sophisticated AI algorithm that learns to predict your Rock-Paper-Scissors moves by analyzing patterns in your recent play history. Unlike simple strategies that just look at your last move or count frequencies, ELPH tries to understand the <em>context</em> of your decisions and how predictable your patterns actually are.</p>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>What is "Short Term Memory" (STM)?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>Simple Summary:</strong> STM is like the AI's recent memory - it remembers your last few moves to look for patterns.</p>
+                
+                <p><strong>Detailed Explanation:</strong> Short Term Memory stores your most recent moves in order. If STM length is 3 and you just played Rock-Paper-Scissors, the AI remembers exactly that sequence: [Rock, Paper, Scissors]. This becomes the "context" for predicting what you'll do next.</p>
+                
+                <p><strong>Why it matters:</strong> Longer STM means the AI can detect more complex patterns (like "every time I play Rock-Paper-Scissors, I follow with Rock"), but it also requires more data to be confident in those patterns.</p>
+                
+                <p><strong>In the experiment:</strong> You can set STM length from 1-8 moves. Length 1 means "just look at the last move," while length 8 means "consider patterns in the last 8 moves together."</p>
+            </div>
+        </div>
+
+        <p>The core insight of ELPH is that not all patterns are equally reliable. Some patterns in your play might be very consistent (high predictability), while others might be essentially random (low predictability). ELPH uses a mathematical concept called <strong>entropy</strong> to measure this reliability and decide which patterns to trust.</p>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>What is "Entropy" in this context?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>Simple Summary:</strong> Entropy measures how "random" or unpredictable a pattern is. Low entropy = predictable, high entropy = random.</p>
+                
+                <p><strong>Detailed Explanation:</strong> Imagine the AI notices that every time you play Rock-Paper, you follow with Scissors 80% of the time and Rock 20% of the time. This pattern has low entropy because it's fairly predictable. But if you follow Rock-Paper with Scissors 33%, Rock 33%, and Paper 33%, that's high entropy - basically random.</p>
+                
+                <p><strong>The Math (Precise Formula):</strong></p>
+                <div class="formula">H = -Σ p<sub>i</sub> × log<sub>2</sub>(p<sub>i</sub>)</div>
+                <p>Where p<sub>i</sub> is the probability of outcome i. We use log base 2 so entropy is measured in "bits" of information.</p>
+                
+                <p><strong>Step-by-Step Example:</strong></p>
+                <div class="calculation-example">
+                    <p>Pattern "Rock-Paper" followed by:</p>
+                    <ul>
+                        <li>Scissors: 8 times (p = 8/10 = 0.8)</li>
+                        <li>Rock: 2 times (p = 2/10 = 0.2)</li>
+                        <li>Paper: 0 times (p = 0/10 = 0.0)</li>
+                    </ul>
+                    <p>H = -(0.8 × log₂(0.8) + 0.2 × log₂(0.2) + 0.0 × log₂(0.0))</p>
+                    <p>H = -(0.8 × -0.322 + 0.2 × -2.322 + 0)</p>
+                    <p>H = -(-0.258 + -0.464) = <strong>0.722 bits</strong></p>
+                    <p><em>Low entropy = predictable pattern!</em></p>
+                </div>
+                
+                <p><strong>Entropy Scale Reference:</strong></p>
+                <ul>
+                    <li><strong>0.0 bits:</strong> Perfectly predictable (100% one outcome)</li>
+                    <li><strong>1.0 bits:</strong> Moderate predictability (75%-25% split)</li>
+                    <li><strong>1.58 bits:</strong> Maximum randomness (33%-33%-33% split)</li>
+                </ul>
+                
+                <p><strong>Why it matters:</strong> ELPH prefers to use low-entropy (predictable) patterns for making decisions and ignores high-entropy (random) patterns. This makes it much smarter than algorithms that treat all patterns equally.</p>
+            </div>
+        </div>
+
+        <p>ELPH generates <strong>hypotheses</strong> about your behavior - essentially educated guesses about what move will follow specific patterns in your STM. For each pattern it observes, it tracks what actually happened next and calculates how predictable that pattern is.</p>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>How does ELPH generate and use hypotheses?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>Simple Summary:</strong> A hypothesis is the AI's guess: "When the player does X, they usually follow with Y."</p>
+                
+                <p><strong>Detailed Explanation:</strong> If your STM contains [Rock, Paper], ELPH creates hypotheses for different patterns:</p>
+                <ul>
+                    <li>Hypothesis 1: "When last move is Paper → player does ?"</li>
+                    <li>Hypothesis 2: "When sequence is Rock-Paper → player does ?"</li>
+                </ul>
+                
+                <p>As the game progresses, ELPH fills in these hypotheses with actual data. Maybe "Paper → Scissors" happens 7 times and "Paper → Rock" happens 3 times. Now ELPH can calculate the entropy (predictability) of this pattern.</p>
+                
+                <p><strong>The Selection Process (Soft-Max Formula):</strong> ELPH doesn't just use the most frequent pattern. Instead, it uses:</p>
+                <div class="formula">P(h<sub>i</sub>) = exp(-H<sub>i</sub>) / Σ<sub>j</sub> exp(-H<sub>j</sub>)</div>
+                <p>Where H<sub>i</sub> is the entropy of hypothesis i, and the sum is over all valid hypotheses.</p>
+                
+                <p><strong>Calculation Example:</strong></p>
+                <div class="calculation-example">
+                    <p>Three competing hypotheses:</p>
+                    <ul>
+                        <li>H₁: "Paper → Scissors" (entropy = 0.5 bits)</li>
+                        <li>H₂: "Rock-Paper → Scissors" (entropy = 0.7 bits)</li>
+                        <li>H₃: "Any → Random" (entropy = 1.58 bits)</li>
+                    </ul>
+                    <p>Selection probabilities:</p>
+                    <ul>
+                        <li>P(H₁) = exp(-0.5) / (exp(-0.5) + exp(-0.7) + exp(-1.58)) = <strong>45.2%</strong></li>
+                        <li>P(H₂) = exp(-0.7) / (...) = <strong>36.5%</strong></li>
+                        <li>P(H₃) = exp(-1.58) / (...) = <strong>18.3%</strong></li>
+                    </ul>
+                    <p><em>Lower entropy hypothesis gets much higher selection probability!</em></p>
+                </div>
+            </div>
+        </div>
+
+        <p>When making its next move, ELPH follows a two-step process: first, it selects which hypothesis (pattern) to trust based on entropy, then it chooses what move to make based on that pattern's historical data.</p>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>How does ELPH make its final move choice?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>Simple Summary:</strong> ELPH predicts your most likely next move, then plays the move that beats it.</p>
+                
+                <p><strong>Detailed Explanation:</strong> Once ELPH selects a reliable hypothesis (pattern), it looks at the historical data for that pattern. If "Rock-Paper" was followed by Scissors 7 times and Rock 3 times, ELPH predicts you'll play Scissors with probability 7/10 = 70%.</p>
+                
+                <p><strong>The Prediction Formula:</strong></p>
+                <div class="formula">P(your move) = count of that move / total count for this pattern</div>
+                
+                <p><strong>Making the Counter-Move:</strong> ELPH doesn't always pick the single most likely prediction. Instead, it uses these probabilities to choose which of your moves to counter, giving more weight to more likely predictions. If it's 70% confident you'll play Scissors, it's more likely to play Rock (which beats Scissors).</p>
+            </div>
+        </div>
+
+        <h2>⚠️ Computational Complexity: The Pattern Explosion Problem</h2>
+        
+        <p>Here's the critical issue you need to understand: ELPH generates hypotheses for <strong>all possible subpatterns</strong> within the STM, not just the full sequence. This creates an exponential explosion that can quickly become computationally intensive.</p>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>How many hypotheses does ELPH actually generate?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>The Pattern Generation Process:</strong></p>
+                <p>For STM = [Rock, Paper, Scissors], ELPH generates hypotheses for:</p>
+                <ul>
+                    <li>Length 1 patterns: "Rock →", "Paper →", "Scissors →" (3 patterns)</li>
+                    <li>Length 2 patterns: "Rock-Paper →", "Paper-Scissors →" (2 patterns)</li>
+                    <li>Length 3 patterns: "Rock-Paper-Scissors →" (1 pattern)</li>
+                </ul>
+                <p><strong>Total:</strong> 6 patterns for STM=3, but each pattern can have 3 possible outcomes (R/P/S)!</p>
+                
+                <p><strong>Hypothesis Explosion by STM Length:</strong></p>
+                <div class="complexity-table">
+                    <table>
+                        <tr><th>STM Length</th><th>Subpatterns</th><th>Max Hypotheses</th><th>Performance</th></tr>
+                        <tr><td>1</td><td>1</td><td>3</td><td>⚡ Instant</td></tr>
+                        <tr><td>2</td><td>3</td><td>9</td><td>⚡ Instant</td></tr>
+                        <tr><td>3</td><td>6</td><td>18</td><td>⚡ Very Fast</td></tr>
+                        <tr><td>4</td><td>10</td><td>30</td><td>✅ Fast</td></tr>
+                        <tr><td>5</td><td>15</td><td>45</td><td>✅ Fast</td></tr>
+                        <tr><td>6</td><td>21</td><td>63</td><td>⚠️ Manageable</td></tr>
+                        <tr><td>7</td><td>28</td><td>84</td><td>⚠️ Slow</td></tr>
+                        <tr><td>8</td><td>36</td><td>108</td><td>⚠️ Slow</td></tr>
+                        <tr><td>10</td><td>55</td><td>165</td><td>❌ Very Slow</td></tr>
+                        <tr><td>15</td><td>120</td><td>360</td><td>❌ Unplayable</td></tr>
+                    </table>
+                </div>
+                <p><em>Formula: For STM length n, number of subpatterns = n×(n+1)/2</em></p>
+            </div>
+        </div>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Does ELPH need to recalculate everything after each move? 🔄</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>The Efficiency Challenge:</strong> Naive implementation would recalculate all entropy values from scratch every turn, which becomes expensive with large datasets.</p>
+                
+                <p><strong>Smart Implementation Strategy:</strong></p>
+                <ul>
+                    <li><strong>Incremental Updates:</strong> Only update entropy for patterns that include the new move</li>
+                    <li><strong>Cached Calculations:</strong> Store entropy values and only recalculate when pattern frequency changes</li>
+                    <li><strong>Sliding Window:</strong> Use efficient data structures to add new data and remove old data</li>
+                    <li><strong>Lazy Evaluation:</strong> Only calculate entropy when a hypothesis is actually being considered</li>
+                </ul>
+                
+                <p><strong>Performance Impact by Game Length:</strong></p>
+                <div class="calculation-example">
+                    <p><strong>Trial 10:</strong> 8 patterns to check, minimal history (fast)</p>
+                    <p><strong>Trial 100:</strong> 20+ patterns with substantial history (moderate)</p>
+                    <p><strong>Trial 500:</strong> 50+ patterns with rich history (slow without optimization)</p>
+                    <p><strong>Trial 1000+:</strong> Requires efficient incremental algorithms</p>
+                </div>
+                
+                <p><strong>Critical Design Decision:</strong> For real-time gameplay, we must use incremental updates, not full recalculation!</p>
+            </div>
+        </div>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Pattern Storage and Memory Requirements 💾</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>Data Structure Requirements:</strong></p>
+                <p>For each unique pattern observed, ELPH must store:</p>
+                <ul>
+                    <li>Pattern sequence (e.g., "Rock-Paper-Scissors")</li>
+                    <li>Frequency count for each possible next move (Rock: 5, Paper: 2, Scissors: 8)</li>
+                    <li>Total observations for the pattern (15)</li>
+                    <li>Cached entropy value (0.845 bits)</li>
+                    <li>Last update timestamp (for cache invalidation)</li>
+                </ul>
+                
+                <p><strong>Memory Growth:</strong></p>
+                <div class="calculation-example">
+                    <p><strong>Early game (trials 1-50):</strong> ~20 patterns, 2KB memory</p>
+                    <p><strong>Mid game (trials 51-200):</strong> ~80 patterns, 8KB memory</p>
+                    <p><strong>Late game (trials 201-500):</strong> ~200 patterns, 20KB memory</p>
+                    <p><strong>Extended play (500+ trials):</strong> Pattern count plateaus, memory stable</p>
+                </div>
+                
+                <p><strong>Optimization Note:</strong> Most patterns appear only once or twice. Pruning rare patterns saves significant memory and computation time.</p>
+            </div>
+        </div>
+
+        <h2>How Parameters Affect ELPH's Behavior</h2>
+        
+        <p>The beauty of ELPH is that you can tune its behavior by adjusting several parameters. Each parameter changes how the AI learns, remembers, and makes decisions.</p>
+
+        <div class="parameter-grid">
+            <div class="parameter-box">
+                <h4>STM Length (1-8)</h4>
+                <p><strong>Lower values (1-2):</strong> Faster learning, simpler patterns only</p>
+                <p><strong>Higher values (6-8):</strong> Can detect complex patterns, needs more data</p>
+            </div>
+            
+            <div class="parameter-box">
+                <h4>Entropy Threshold (0.5-2.0)</h4>
+                <p><strong>Lower values:</strong> Only trusts very predictable patterns, conservative</p>
+                <p><strong>Higher values:</strong> Willing to use somewhat random patterns, aggressive</p>
+            </div>
+            
+            <div class="parameter-box">
+                <h4>Min Observations (2-10)</h4>
+                <p><strong>Lower values:</strong> Acts on limited evidence, faster but riskier</p>
+                <p><strong>Higher values:</strong> Waits for solid evidence, slower but more reliable</p>
+            </div>
+            
+            <div class="parameter-box">
+                <h4>Hypothesis Pruning (On/Off)</h4>
+                <p><strong>On:</strong> Removes unreliable patterns, stays focused</p>
+                <p><strong>Off:</strong> Keeps all patterns, might get confused by noise</p>
+            </div>
+        </div>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>How do these parameters interact with each other?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>STM Length vs Min Observations:</strong> Longer STM creates more specific patterns that need more observations to be reliable. If STM=6 but Min Observations=2, you might get unreliable predictions from complex patterns with too little data.</p>
+                
+                <p><strong>Entropy Threshold vs Min Observations:</strong> These work together to filter patterns. High entropy threshold + low min observations = aggressive learning from potentially noisy data. Low entropy threshold + high min observations = very conservative, only acts on rock-solid patterns.</p>
+                
+                <p><strong>Pruning vs Everything Else:</strong> With pruning ON, unreliable patterns get removed, so the other parameters matter more for the patterns that remain. With pruning OFF, you need higher min observations and lower entropy thresholds to avoid being misled by bad patterns.</p>
+                
+                <p><strong>Optimal Combinations:</strong> For beginners, try STM=2, Entropy=1.0, Min Obs=5, Pruning=ON. For advanced opponents, try STM=5, Entropy=1.5, Min Obs=3, Pruning=ON.</p>
+            </div>
+        </div>
+
+        <h2>ELPH vs Other Algorithms</h2>
+        
+        <p>What makes ELPH special compared to simpler algorithms? While a frequency counter just tracks "you play Rock 40% of the time," ELPH tracks "when you've just played Paper-Scissors, you play Rock 80% of the time." This context-awareness and reliability measurement make ELPH much more sophisticated and harder to beat consistently.</p>
+
+        <div class="concept-card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <span>Why is ELPH more effective than simple strategies?</span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="card-content">
+                <p><strong>Compared to Random AI:</strong> ELPH actually learns from your behavior instead of being completely unpredictable.</p>
+                
+                <p><strong>Compared to Counter AI:</strong> ELPH considers context, not just your last move. It might notice you always counter your own last move, or that you have different patterns after wins vs losses.</p>
+                
+                <p><strong>Compared to Frequency Counter:</strong> ELPH recognizes that your overall frequencies might hide important conditional patterns. You might play Rock 33% overall, but 80% after Paper-Scissors.</p>
+                
+                <p><strong>Mathematical Advantage:</strong> The entropy-based selection means ELPH automatically focuses on your most predictable behaviors and ignores the random noise in your play. This makes it much harder to confuse or exploit.</p>
+            </div>
+        </div>
+
+        <p><em>This algorithm is based on the research by Mohammadi Sepahvand et al. (2014) in their computational study of sequential decision making. The original ELPH was designed to model human learning behavior, but here we've implemented it as an AI opponent to explore human-AI interaction patterns.</em></p>
+    </div>
+
+    <script>
+        function toggleCard(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+    </script>
+</body>
+</html> 

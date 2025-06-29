@@ -4,4 +4,4 @@ globs:
 alwaysApply: true
 ---
 Have a lower threshold for asking questions of the user than normal - consider challenging or clarifying things a bit more frequently. 
-Put CSS in a CSS file in the root directory and use that file project wide
+Put CSS in a CSS file in the root directory and use that file project wide. Never add CSS directly into HTML.

@@ -45,12 +45,12 @@
             </div>
             
             <div class="tip">
-                💡 <strong>Testing Instructions:</strong> Press F12 → Console tab, then click buttons above. You should see structured data logged for each click. This same pattern will work for your experiment.
+                💡 <strong>Testing Instructions:</strong> Press F12 → Console tab, then click buttons above. You should see structured data logged for each click. We'll walk through setting this up for your experiment by the end of this step.
             </div>
         </div>
 
         <div class="step-section">
-            <h3>📋 How the Example Works (Brief Code Explanation)</h3>
+            <h3>📋 How the Example Works (Simplified)</h3>
             <div class="step-box">
                 <h4>1. HTML Button → JavaScript Function Connection</h4>
                 <div class="code-block">
@@ -175,7 +175,28 @@ function logResponse(response) {
                     <li>Update the experiment name, description, and folder path</li>
                     <li>Save and test locally by opening the homepage in your browser</li>
                 </ol>
-                <div class="tip">💡 Your link will only work when running locally, not on GitHub Pages.</div>
+                <div class="tip">
+                    <h4>🚀 Deploying Your Changes to the Web</h4>
+                    <p>For your new link to work on your public GitHub Pages site, you need to "commit" and "push" your changes. This saves a new version of your project and updates the live website.</p>
+                    
+                    <p><strong>Method 1: Using the Cursor/VS Code GUI (Recommended)</strong></p>
+                    <ol>
+                        <li>Go to the <strong>Source Control</strong> tab (the icon with three connected dots) in the left-hand sidebar.</li>
+                        <li>You will see your changed files listed under "Changes".</li>
+                        <li>In the "Message" box at the top, type a short description of your changes (e.g., "Add my experiment to homepage").</li>
+                        <li>Click the <strong>Commit</strong> button.</li>
+                        <li>Finally, click the <strong>Sync Changes</strong> button to push your updates to GitHub. Your site should be updated in a few minutes.</li>
+                    </ol>
+
+                    <p><strong>Method 2: Using Git Commands in the Terminal</strong></p>
+                    <p>Open the terminal (in Cursor: `Terminal > New Terminal`) and run these commands one by one:</p>
+                    <div class="code-block"><code>git add .</code></div>
+                    <p><em>This stages all your changes for the next commit.</em></p>
+                    <div class="code-block"><code>git commit -m "Add my experiment to homepage"</code></div>
+                    <p><em>This saves your changes with a descriptive message.</em></p>
+                    <div class="code-block"><code>git push</code></div>
+                    <p><em>This uploads your saved changes to GitHub, updating your live site.</em></p>
+                </div>
             </div>
         </div>
 
@@ -183,22 +204,28 @@ function logResponse(response) {
             <h3>🤖 AI-Assisted Development</h3>
             <div class="step-box">
                 <h4>Use Cursor to Generate Your Experiment Code:</h4>
-                <p>Add your Step 0 research to Cursor's context (@ mention your files), then use this prompt:</p>
-                <div class="code-block">
-                    <code>Based on my Step 0 research planning, help me create my first interactive experiment:
-
-My study focus: [DESCRIBE YOUR RESEARCH FROM STEP 0]
-My experiment needs: [LIST YOUR REQUIRED INTERACTIONS]
-
-Please create:
-1. HTML with appropriate buttons/inputs for my specific task
-2. JavaScript function to capture responses and log structured data
-3. Console logging to verify data collection works
-4. Basic participant feedback after each response
-
-Keep it simple for Step 3 - just basic interaction and console logging. I'll add data storage and analysis in later steps.</code>
+                <p>Before using the prompt below, you need to prepare the context for the AI:</p>
+                <ol>
+                    <li>Use your <code>study-plan.md</code> file that you created in Step 0 in context by @-mentioning it.</li>
+                </ol>
+                <p>Once you've done that, copy the following prompt to generate your experiment code:</p>
+                <div class="formatted-prompt">
+                    <div class="prompt-header">
+                        <span class="prompt-title">AI Prompt: Generate Experiment Code</span>
+                        <button class="prompt-copy-btn" onclick="copyPrompt('generate-exp-code')" title="Copy prompt text">Copy</button>
+                    </div>
+                    <div class="prompt-content" id="generate-exp-code">
+                        <p>Based on my Step 0 research planning, help me create my first interactive experiment:</p>
+                        <p>Please create:</p>
+                        <ol>
+                            <li>HTML with appropriate buttons/inputs for my specific task</li>
+                            <li>JavaScript function to capture responses and log structured data</li>
+                            <li>Console logging to verify data collection works</li>
+                            <li>Basic participant feedback after each response</li>
+                        </ol>
+                        <p>Keep it simple for Step 3 - just basic interaction and console logging. I'll add data storage and analysis in later steps.</p>
+                    </div>
                 </div>
-                <button onclick="copyPrompt()" class="primary-btn">📋 Copy AI Prompt</button>
             </div>
         </div>
 
@@ -237,26 +264,7 @@ Keep it simple for Step 3 - just basic interaction and console logging. I'll add
     </div>
 
     <script src="../../shared/progress-component.js"></script>
+    <script src="../../shared/code-copy-utils.js"></script>
     <script src="step3-experiment.js"></script>
-    <script>
-        function copyPrompt() {
-            const prompt = `Based on my Step 0 research planning, help me create my first interactive experiment:
-
-My study focus: [DESCRIBE YOUR RESEARCH FROM STEP 0]
-My experiment needs: [LIST YOUR REQUIRED INTERACTIONS]
-
-Please create:
-1. HTML with appropriate buttons/inputs for my specific task
-2. JavaScript function to capture responses and log structured data
-3. Console logging to verify data collection works
-4. Basic participant feedback after each response
-
-Keep it simple for Step 3 - just basic interaction and console logging. I'll add data storage and analysis in later steps.`;
-            
-            navigator.clipboard.writeText(prompt).then(() => {
-                alert('Prompt copied to clipboard! Paste it in Cursor after adding your Step 0 files to context.');
-            });
-        }
-    </script>
 </body>
 </html> 

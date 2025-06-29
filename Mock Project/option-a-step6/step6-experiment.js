@@ -12,16 +12,30 @@ let gameState = {
     gameData: [],
     gameStartTime: null,
     isGameActive: false,
-    aiAgent: null
+    aiAgent: null,
+    // New: basic participant-level metadata captured automatically
+    participantInfo: {
+        sessionStart: new Date().toISOString(),
+        name: null,
+        age: null
+    }
 };
 
 let gameConfig = {
-    numTrials: 30,
+    numTrials: 100,
     trialDuration: 5,
     feedbackDelay: 1500,
     showProgress: true,
-    aiAlgorithm: 'relph',
-    learningRate: 'moderate'
+    aiAlgorithm: '',
+    learningRate: 'moderate',
+    stmLength: 3,
+    entropyThreshold: 1.5,
+    minObservations: 3,
+    alpha: 0.3,
+    phase1End: 200,
+    phase2End: 400,
+    showAIStrategy: true,
+    askParticipantInfo: true
 };
 
 // Initialize when page loads
@@ -39,6 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup event listeners
     setupEventListeners();
+    
+    // Show participant form if configured (now that config is loaded)
+    setupParticipantOverlay();
 });
 
 function loadGameConfiguration() {
@@ -58,30 +75,114 @@ function loadGameConfiguration() {
 }
 
 function initializeAI() {
-    // Simple initialization - complex algorithms handled in separate file
-    const alphaValues = {
-        'slow': 0.1,
-        'moderate': 0.3,
-        'fast': 0.7
-    };
+    // Create AI based on algorithm selection from Step 5
+    const algorithm = gameConfig.aiAlgorithm;
     
-    const alpha = gameConfig.alpha || alphaValues[gameConfig.learningRate] || 0.3;
-    const memoryLength = 2;
+    if (!algorithm) {
+        // No algorithm selected in Step 5 - use random as fallback with message
+        gameState.aiAgent = new RandomAI();
+        updateGameStatus('⚠️ No AI algorithm configured in Step 5. Using Random AI as fallback. Configure in Step 5 for full experience.');
+        console.log(`🤖 No algorithm configured - using RANDOM fallback`);
+        return;
+    }
     
-    // Create AI agent using factory function from algorithms file
-    gameState.aiAgent = createAIAgent(gameConfig.aiAlgorithm, alpha, memoryLength);
-    
-    console.log(`🤖 AI Agent created: ${gameConfig.aiAlgorithm.toUpperCase()}, α=${alpha}`);
+    if (algorithm === 'elph' || algorithm === 'pattern') {
+        // Use the ELPH AI (PatternAI kept for backward compatibility)
+        gameState.aiAgent = new ELPH_AI({
+            stmLength: gameConfig.stmLength || gameConfig.patternLength || 3,
+            entropyThreshold: gameConfig.entropyThreshold || 1.5,
+            minObservations: gameConfig.minObservations || gameConfig.confidenceThreshold || 3,
+            hypothesisPruning: gameConfig.hypothesisPruning !== false,
+            learningRate: gameConfig.learningRate || 'moderate',
+            alpha: gameConfig.alpha || 0.3
+        });
+        console.log(`🤖 ELPH AI created with config:`, gameState.aiAgent.config);
+    } else if (algorithm === 'random') {
+        // Use dedicated RandomAI
+        gameState.aiAgent = new RandomAI();
+        console.log(`🤖 RandomAI created`);
+    } else if (algorithm === 'counter') {
+        // Use dedicated CounterAI
+        gameState.aiAgent = new CounterAI();
+        console.log(`🤖 CounterAI created`);
+    } else if (algorithm === 'biased_random') {
+        // Use dedicated BiasedRandomAI
+        const aiConfig = {
+            phase1End: gameConfig.phase1End || 200,
+            phase2End: gameConfig.phase2End || 400
+        };
+        gameState.aiAgent = new BiasedRandomAI(aiConfig);
+        console.log(`🤖 BiasedRandomAI created with phases:`, aiConfig);
+    } else if (algorithm === 'frequency_counter') {
+        // Use dedicated FrequencyCounterAI
+        gameState.aiAgent = new FrequencyCounterAI();
+        console.log(`🤖 FrequencyCounterAI created`);
+    } else {
+        // Unknown algorithm - fallback to random
+        gameState.aiAgent = new RandomAI();
+        updateGameStatus(`⚠️ Unknown algorithm "${algorithm}" - using Random AI as fallback.`);
+        console.log(`🤖 Unknown algorithm ${algorithm} - using RANDOM fallback`);
+    }
 }
 
 function updateConfigurationDisplay() {
-    // Simple UI updates
+    // Update UI with configuration details
     document.getElementById('total-rounds').textContent = gameState.totalRounds;
-    document.getElementById('current-algorithm').textContent = gameConfig.aiAlgorithm.toUpperCase();
     
-    const alphaDisplay = gameConfig.alpha || (gameConfig.learningRate === 'slow' ? '0.1' : 
-                                             gameConfig.learningRate === 'fast' ? '0.7' : '0.3');
-    document.getElementById('current-learning-rate').textContent = `α=${alphaDisplay}`;
+    const algorithm = gameConfig.aiAlgorithm;
+    const strategyElement = document.getElementById('current-algorithm');
+    const configDetails = document.getElementById('config-details');
+    
+    if (strategyElement) {
+        if (!algorithm) {
+            strategyElement.textContent = 'NO ALGORITHM CONFIGURED (using Random fallback)';
+        } else {
+            switch (algorithm) {
+                case 'pattern':
+                case 'elph':
+                    strategyElement.textContent = `ELPH AI (${gameConfig.learningRate || 'moderate'} learning)`;
+                    break;
+                case 'random':
+                    strategyElement.textContent = 'RANDOM';
+                    break;
+                case 'counter':
+                    strategyElement.textContent = 'COUNTER (beats your last move)';
+                    break;
+                case 'biased_random':
+                    strategyElement.textContent = 'BIASED RANDOM (original study phases)';
+                    break;
+                case 'frequency_counter':
+                    strategyElement.textContent = 'FREQUENCY COUNTER (beats your most common move)';
+                    break;
+                default:
+                    strategyElement.textContent = `UNKNOWN (${algorithm})`;
+            }
+        }
+    }
+    
+    // Show additional config details based on algorithm
+    if (configDetails) {
+        if (!algorithm) {
+            configDetails.innerHTML = `<small>Return to <a href="../option-a-step5/index.html">Step 5</a> to configure an AI algorithm</small>`;
+            configDetails.style.display = 'block';
+        } else if (algorithm === 'pattern' || algorithm === 'elph') {
+            configDetails.innerHTML = `
+                <small>STM Length: ${gameConfig.stmLength || gameConfig.patternLength || 3} moves | 
+                Min Observations: ${gameConfig.minObservations || gameConfig.confidenceThreshold || 3} | 
+                Entropy ≤ ${gameConfig.entropyThreshold || 1.5}</small>
+            `;
+            configDetails.style.display = 'block';
+        } else if (algorithm === 'biased_random') {
+            configDetails.innerHTML = `
+                <small>Phase 1: Random (1-${gameConfig.phase1End || 200}) | 
+                Phase 2: 50% Rock (${(gameConfig.phase1End || 200) + 1}-${gameConfig.phase2End || 400}) | 
+                Phase 3: 80% Paper (${(gameConfig.phase2End || 400) + 1}+)</small>
+            `;
+            configDetails.style.display = 'block';
+        } else {
+            configDetails.style.display = 'none';
+        }
+    }
 }
 
 function setupEventListeners() {
@@ -121,15 +222,15 @@ function makeChoice(choice) {
     const choiceTime = Date.now();
     gameState.playerHistory.push(playerChoice);
     
-    // 2. Get AI choice (algorithms file handles the complexity)
-    const aiChoice = gameState.aiAgent.makeMove(gameState.playerHistory);
+    // 2. Get AI choice (simple AI makes its decision)
+    const aiChoice = gameState.aiAgent.makeMove();
     
     // 3. Simple game logic
     const result = determineWinner(playerChoice, aiChoice);
     updateScores(result);
     
-    // 4. Let AI learn (algorithms file handles this)
-    gameState.aiAgent.learn(playerChoice, aiChoice, result);
+    // 4. Let AI remember player's move for next time
+    gameState.aiAgent.rememberPlayerMove(playerChoice);
     
     // 5. Record data and update UI
     recordTrialData(playerChoice, aiChoice, result, choiceTime);
@@ -198,16 +299,8 @@ function recordTrialData(playerChoice, aiChoice, result, choiceTime) {
         result: result,
         timestamp: choiceTime,
         reactionTime: choiceTime - (gameState.lastTrialEnd || gameState.gameStartTime),
-        // AI reasoning comes from algorithms file
-        aiReasoning: gameState.aiAgent.getReasoning(),
-        aiAlgorithm: gameConfig.aiAlgorithm,
-        learningRate: gameState.aiAgent.alpha,
-        playerHistory: [...gameState.playerHistory],
-        currentScore: {
-            player: gameState.playerScore,
-            ai: gameState.aiScore,
-            ties: gameState.tieScore
-        }
+        // AI reasoning is trial-specific and comes from the AI module
+        aiReasoning: gameState.aiAgent.explainMove()
     };
     
     gameState.gameData.push(trialData);
@@ -231,7 +324,15 @@ function showChoices(playerChoice, aiChoice, result) {
     // Show results
     document.getElementById('result-text').textContent = getResultText(result);
     document.getElementById('result-reason').textContent = getResultReason(playerChoice, aiChoice, result);
-    document.getElementById('ai-reasoning').textContent = gameState.aiAgent.getReasoning();
+    
+    // Show AI reasoning only if enabled in configuration
+    const aiReasoningElement = document.getElementById('ai-reasoning');
+    if (gameConfig.showAIStrategy !== false) {
+        aiReasoningElement.textContent = gameState.aiAgent.explainMove();
+        aiReasoningElement.style.display = 'block';
+    } else {
+        aiReasoningElement.style.display = 'none';
+    }
     
     // Style based on result
     document.getElementById('result-display').className = `result-display ${result}`;
@@ -289,8 +390,8 @@ function updateRoundDisplay() {
     
     if (gameConfig.showProgress) {
         const progressPercent = ((gameState.currentRound - 1) / gameState.totalRounds) * 100;
-        const progressBar = document.querySelector('.progress-bar');
-        if (progressBar) progressBar.style.width = `${progressPercent}%`;
+        const gameProgressFill = document.getElementById('game-progress-fill');
+        if (gameProgressFill) gameProgressFill.style.width = `${progressPercent}%`;
     }
 }
 
@@ -385,9 +486,9 @@ function displayFinalResults() {
             
             <div class="result-card">
                 <h4>⚙️ AI Details</h4>
-                <p><strong>Type:</strong> ${gameConfig.aiAlgorithm.toUpperCase()} ${gameConfig.aiAlgorithm === 'relph' ? '(learns from wins/losses)' : gameConfig.aiAlgorithm === 'elph' ? '(learns your patterns)' : '(random choices)'}</p>
-                <p><strong>Learning Speed:</strong> ${gameState.aiAgent.alpha < 0.3 ? 'Slow' : gameState.aiAgent.alpha > 0.5 ? 'Fast' : 'Medium'}</p>
-                <p><strong>Patterns Found:</strong> ${gameState.aiAgent.valueMap ? gameState.aiAgent.valueMap.size : gameState.aiAgent.predictionMap?.size || 0}</p>
+                <p><strong>Strategy:</strong> ${gameState.aiAgent.strategy.toUpperCase()}</p>
+                <p><strong>Description:</strong> ${gameState.aiAgent.strategy === 'random' ? 'Picks moves randomly' : 'Counters your last move'}</p>
+                <p><strong>Moves remembered:</strong> ${gameState.aiAgent.playerHistory.length}</p>
             </div>
         </div>
     `;
@@ -396,49 +497,43 @@ function displayFinalResults() {
 
 function exportGameData() {
     console.log('🔄 Export button clicked');
-    
+
     try {
-        // Simple data export - with error handling
         const exportData = {
-            experimentInfo: {
-                title: 'Step 6: Interactive Elements - RPS AI Demonstration',
-                algorithm: gameConfig.aiAlgorithm,
-                learningRate: gameState.aiAgent ? gameState.aiAgent.alpha : 'unknown',
-                totalRounds: gameState.totalRounds,
-                completedAt: new Date().toISOString()
-            },
-            finalScores: {
-                player: gameState.playerScore,
-                ai: gameState.aiScore,
-                ties: gameState.tieScore
-            },
             gameConfiguration: gameConfig,
+            participantInfo: gameState.participantInfo,
+            experimentSummary: {
+                title: 'Step 6: Interactive Elements - RPS AI Demonstration',
+                totalRounds: gameState.totalRounds,
+                completedAt: new Date().toISOString(),
+                finalScores: {
+                    player: gameState.playerScore,
+                    ai: gameState.aiScore,
+                    ties: gameState.tieScore
+                },
+                aiStats: gameState.aiAgent ? gameState.aiAgent.getStats() : null
+            },
             trialData: gameState.gameData,
-            // AI memory data comes from algorithms file
-            aiMemory: {
-                valueMap: gameState.aiAgent && gameState.aiAgent.valueMap ? Object.fromEntries(gameState.aiAgent.valueMap) : undefined,
-                predictionMap: gameState.aiAgent && gameState.aiAgent.predictionMap ? Object.fromEntries(gameState.aiAgent.predictionMap) : undefined,
-                algorithm: gameState.aiAgent ? gameState.aiAgent.algorithm : 'unknown'
-            }
+            fullPlayerHistory: gameState.playerHistory
         };
-        
+
         console.log('📊 Export data prepared:', exportData);
-        
+
         // Create download
         const dataStr = JSON.stringify(exportData, null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
-        
+
         const link = document.createElement('a');
         link.href = URL.createObjectURL(dataBlob);
-        link.download = `rps-ai-experiment-${gameConfig.aiAlgorithm}-${new Date().toISOString().split('T')[0]}.json`;
-        
+        link.download = `rps-ai-experiment-${gameConfig.aiAlgorithm || 'data'}-${new Date().toISOString().split('T')[0]}.json`;
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         updateGameStatus('✅ Results downloaded successfully!');
         console.log('✅ Export completed successfully');
-        
+
     } catch (error) {
         console.error('❌ Export failed:', error);
         updateGameStatus('❌ Export failed. Check console for details.');
@@ -460,7 +555,13 @@ function resetGame() {
             gameData: [],
             gameStartTime: null,
             isGameActive: false,
-            aiAgent: null
+            aiAgent: null,
+            // New: basic participant-level metadata captured automatically
+            participantInfo: {
+                sessionStart: new Date().toISOString(),
+                name: null,
+                age: null
+            }
         };
         
         // Reinitialize
@@ -519,9 +620,15 @@ Can you help me design the algorithm and implement the JavaScript?`;
 }
 
 function copyImplementationPrompt() {
-    const promptText = `I want to add interactive elements to my psychology experiment. Based on my JSON configuration from Step 5:
+    const promptText = `I want to add interactive elements to my psychology experiment. 
 
-[PASTE YOUR CONFIG FROM STEP 5]
+Before running this prompt:
+1. Go to Step 5 and download your configuration using "📥 Download JSON Config" button
+2. Create a study-plan.md file with your research details from Step 0
+
+Then include these files as context:
+- Your downloaded config.json file from Step 5
+- Your study-plan.md file with research details from Step 0
 
 Help me implement:
 1. [SPECIFIC INTERACTIVE ELEMENT] that adapts to participant behavior
@@ -529,7 +636,7 @@ Help me implement:
 3. Real-time updates to experiment difficulty/feedback/responses
 4. Data logging for the interactive element's decisions
 
-My experiment type is [YOUR EXPERIMENT TYPE] and measures [YOUR VARIABLES].`;
+Reference my study-plan.md file for experiment details.`;
 
     navigator.clipboard.writeText(promptText).then(() => {
         showStatus('Implementation prompt copied! Use this with your AI assistant.', 'success');
@@ -562,4 +669,36 @@ function showStatus(message, type) {
 
 // Export for debugging
 window.gameState = gameState;
-window.gameConfig = gameConfig; 
+window.gameConfig = gameConfig;
+
+// Capture or update participant-level data (extend as needed)
+function gatherParticipantInfo(customFields = {}) {
+    gameState.participantInfo = {
+        ...gameState.participantInfo,
+        ...customFields
+    };
+    console.log('🧑‍💻 Participant info captured:', gameState.participantInfo);
+}
+
+// Show overlay form if askParticipantInfo is true
+function setupParticipantOverlay() {
+    const shouldAsk = gameConfig.askParticipantInfo !== false; // default true
+    const overlay = document.getElementById('participant-overlay');
+    const form = document.getElementById('participant-form');
+    if (!shouldAsk || !overlay || !form) return;
+
+    // Hide main game area until form completed
+    const gameContainer = document.querySelector('.experiment-demo');
+    if (gameContainer) gameContainer.style.display = 'none';
+
+    overlay.style.display = 'block';
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nameVal = document.getElementById('participant-name').value.trim();
+        const ageVal = document.getElementById('participant-age').value.trim();
+        if (!nameVal) return; // Required validation
+        gatherParticipantInfo({ name: nameVal, age: ageVal ? Number(ageVal) : null });
+        overlay.style.display = 'none';
+        if (gameContainer) gameContainer.style.display = 'block';
+    });
+} 

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Methodology: Sequential Decisions Research</title>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Detailed Methodology: Sequential Decisions Study</h1>
+            <p><strong>Understanding the Research Methods Behind Our Rock-Paper-Scissors Experiment</strong></p>
+            <div class="navigation" style="margin-top: 15px;">
+                <a href="index.html" class="nav-btn secondary">← Back to Step 0</a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>📖 Study Overview</h3>
+            <p>This page explains the detailed methodology from Mohammadi Sepahvand et al. (2014), which forms the foundation for our web experiment. The study compared two theories of how humans learn in uncertain environments using a Rock-Paper-Scissors task.</p>
+        </div>
+
+        <div class="step-section">
+            <h3>🎯 The Original Experiment</h3>
+            <div class="step-box">
+                <h4>Participants</h4>
+                <ul>
+                    <li><strong>Healthy Controls (HC):</strong> Neurologically normal participants</li>
+                    <li><strong>Left Brain Damaged (LBD):</strong> Patients with left hemisphere brain damage</li>
+                    <li><strong>Right Brain Damaged (RBD):</strong> Patients with right hemisphere brain damage</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>Experimental Design</h4>
+                <p><strong>Task:</strong> Participants played 600 rounds of Rock-Paper-Scissors against a computer opponent.</p>
+                
+                <p><strong>Three Phases (participants were not told about these phases):</strong></p>
+                <ol>
+                    <li><strong>Phase 1 (Trials 1-200):</strong> Computer plays randomly (33% each choice)</li>
+                    <li><strong>Phase 2 (Trials 201-400):</strong> Computer plays rock 50% of the time (lightly biased)</li>
+                    <li><strong>Phase 3 (Trials 401-600):</strong> Computer plays paper 80% of the time (heavily biased)</li>
+                </ol>
+                
+                <p><strong>Analysis Focus:</strong> Only the last 200 trials (Phase 3) were analyzed, as no learning was detected in the first two phases. This heavy bias toward paper provided the clearest test of whether participants could detect and exploit patterns.</p>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🤖 The Two Computational Models</h3>
+            <p>The researchers developed two competing models to explain how humans might learn in this task:</p>
+
+            <div class="step-box">
+                <h4>Model 1: ELPH (Statistical Learning)</h4>
+                <p><strong>Core Idea:</strong> Learn to predict what the opponent will play next, then choose the winning response.</p>
+                
+                <p><strong>How It Works:</strong></p>
+                <ol>
+                    <li><strong>Memory:</strong> Keeps track of the last n moves in Short Term Memory (STM)</li>
+                    <li><strong>Hypotheses:</strong> Generates all possible patterns from recent moves (e.g., "rock followed by paper")</li>
+                    <li><strong>Prediction:</strong> Each hypothesis tracks what usually comes next and how often</li>
+                    <li><strong>Selection:</strong> Uses entropy (randomness measure) to pick the most reliable hypothesis</li>
+                    <li><strong>Pruning:</strong> Deletes hypotheses that are too random or unreliable</li>
+                </ol>
+
+                <p><strong>Example:</strong> If the last two moves were "paper, rock", ELPH creates hypotheses like:</p>
+                <ul>
+                    <li>"After rock → usually see paper (60% of time)"</li>
+                    <li>"After paper, rock → usually see rock (80% of time)"</li>
+                    <li>"After paper → usually see rock (70% of time)"</li>
+                </ul>
+                <p>It picks the most consistent hypothesis and predicts accordingly.</p>
+            </div>
+
+            <div class="step-box">
+                <h4>Model 2: RELPH (Reinforcement Learning)</h4>
+                <p><strong>Core Idea:</strong> Learn directly which moves lead to wins in different situations.</p>
+                
+                <p><strong>How It Works:</strong></p>
+                <ol>
+                    <li><strong>Memory:</strong> Same STM system as ELPH</li>
+                    <li><strong>Hypotheses:</strong> Track which of YOUR moves worked well in each situation</li>
+                    <li><strong>Rewards:</strong> +1 for wins, 0 for ties, -1 for losses</li>
+                    <li><strong>Learning:</strong> Updates the value of each move based on recent outcomes</li>
+                    <li><strong>Selection:</strong> Uses soft-max rule to balance trying the best move vs. exploring alternatives</li>
+                </ol>
+
+                <p><strong>Example:</strong> When the last two moves were "paper, rock", RELPH remembers:</p>
+                <ul>
+                    <li>"In this situation, playing scissors gave me +3 total reward"</li>
+                    <li>"Playing rock gave me -1 total reward"</li>
+                    <li>"Playing paper gave me +1 total reward"</li>
+                </ul>
+                <p>It's most likely to choose scissors, but might sometimes explore other options.</p>
+
+                <p><strong>Key Parameters:</strong></p>
+                <ul>
+                    <li><strong>Learning rate (α):</strong> How much weight to give recent vs. old experiences</li>
+                    <li><strong>Soft-max temperature:</strong> Balance between exploitation (best move) and exploration (trying alternatives)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📊 Model Comparison & Parameter Estimation</h3>
+            
+            <div class="step-box">
+                <h4>Fitting Models to Human Data</h4>
+                <p>For each human participant, the researchers found the best parameter settings that made each model play most similarly to that person's actual choices.</p>
+                
+                <p><strong>Parameters Tested:</strong></p>
+                <ul>
+                    <li><strong>n (STM length):</strong> How many recent moves to remember (typically 1-3)</li>
+                    <li><strong>Hthr (entropy threshold):</strong> How reliable a hypothesis must be to keep it</li>
+                    <li><strong>α (learning rate):</strong> RELPH only - how quickly to update from new experiences</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>Model Evaluation</h4>
+                <p>Models were compared using:</p>
+                <ul>
+                    <li><strong>Win Rates:</strong> How well each model performed against the computer</li>
+                    <li><strong>Learning Curves:</strong> How quickly performance improved over time</li>
+                    <li><strong>Choice Sequences:</strong> How closely models matched human choice patterns</li>
+                    <li><strong>Statistical Measures:</strong> AIC and Bayes factors to compare model quality</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🔍 Key Findings</h3>
+            
+            <div class="step-box">
+                <h4>RELPH vs. ELPH Performance</h4>
+                <p>The researchers used both models to predict human behavior patterns by fitting them to the actual choice sequences participants made.</p>
+                
+                <ul>
+                    <li><strong>ELPH Problem:</strong> When fitted to the same data, ELPH learned the 80% paper bias faster than humans actually did</li>
+                    <li><strong>RELPH Success:</strong> RELPH's learning curve matched human learning rates and final performance</li>
+                    <li><strong>Implication:</strong> Humans use reinforcement learning (reward-based) rather than statistical learning (prediction-based)</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>Brain Damage Effects</h4>
+                <ul>
+                    <li><strong>Healthy Controls:</strong> Best modeled by standard RELPH with exploration/exploitation balance</li>
+                    <li><strong>Left Brain Damage:</strong> Best modeled by "greedy" RELPH - always chose the best option without exploration</li>
+                    <li><strong>Right Brain Damage:</strong> Best modeled by RELPH with poor exploration strategy - gave up on hypotheses too quickly</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>💡 Implications for Our Web Experiment</h3>
+            
+            <div class="step-box">
+                <h4>Recreating the Original Experiment</h4>
+                <p>First, we'll implement the core experimental design from the original study:</p>
+                <ul>
+                    <li><strong>Three-Phase Structure:</strong> Random play (33% each), light bias (50% rock), heavy bias (80% paper)</li>
+                    <li><strong>Biased Computer Opponent:</strong> Simple probabilistic opponent matching the original study's design</li>
+                    <li><strong>Data Collection:</strong> Track participant choices, reaction times, and win rates to analyze learning patterns</li>
+                    <li><strong>Learning Analysis:</strong> Apply RELPH/ELPH models to analyze participant behavior patterns</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>Extensions: AI Opponents & Detection</h4>
+                <p>Beyond the original experiment, we can explore new research questions:</p>
+                <ul>
+                    <li><strong>ELPH AI Opponent:</strong> Computer opponent that tries to predict player patterns (statistical learning)</li>
+                    <li><strong>RELPH AI Opponent:</strong> Computer opponent that learns from wins/losses (reinforcement learning)</li>
+                    <li><strong>AI Detection Task:</strong> Can participants identify when they're playing against different AI learning strategies?</li>
+                    <li><strong>Strategy Comparison:</strong> How do participants adapt differently to various AI learning approaches?</li>
+                </ul>
+            </div>
+
+            <div class="step-box">
+                <h4>Research Questions We Can Explore</h4>
+                
+                <p><strong>Original Study Questions:</strong></p>
+                <ul>
+                    <li>Do healthy web participants show RELPH-like learning patterns?</li>
+                    <li>Can we detect individual differences in exploration vs. exploitation strategies?</li>
+                    <li>How quickly do participants adapt to biased opponents?</li>
+                    <li>What factors influence learning rate and final performance?</li>
+                </ul>
+
+                <p><strong>Extension Questions:</strong></p>
+                <ul>
+                    <li>How do participants perform against AI opponents using different learning strategies?</li>
+                    <li>Can participants detect whether they're playing against statistical vs. reinforcement learning AI?</li>
+                    <li>Do participants change their strategies when they think they're playing against AI vs. humans?</li>
+                    <li>Which AI learning approach creates more engaging or challenging gameplay?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>🔧 Technical Implementation Notes</h3>
+            
+            <div class="step-box">
+                <h4>Algorithm Implementation</h4>
+                <p>For our web experiment, we'll implement:</p>
+                <ul>
+                    <li><strong>RELPH AI:</strong> A computer opponent that learns from wins/losses and balances exploration/exploitation</li>
+                    <li><strong>ELPH AI:</strong> A computer opponent that tries to predict player patterns</li>
+                    <li><strong>Biased AIs:</strong> Simple algorithms that favor specific moves with varying probabilities</li>
+                    <li><strong>Data Logging:</strong> Track all choices, outcomes, reaction times, and game states</li>
+                    <li><strong>Analysis Tools:</strong> Apply RELPH/ELPH models to analyze participant behavior patterns</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html" class="nav-btn secondary">← Back to Step 0</a>
+        </div>
+
+        <div class="footer">
+            <p>Detailed Methodology - Sequential Decisions Study (Mohammadi Sepahvand et al., 2014)</p>
+        </div>
+    </div>
+</body>
+</html> 

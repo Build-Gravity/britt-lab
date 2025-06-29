@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 6 Test Suite - Psychology Experiment</title>
+    <link rel="stylesheet" href="../../../styles.css">
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Step 6 Experiment</a>
+        
+        <h1>🧪 Step 6 Test Suite</h1>
+        <p class="subtitle">Simple tests to verify the AI experiment works correctly</p>
+        
+        <div class="navigation">
+            <button onclick="runAllTests()" class="primary-btn">🚀 Run All Tests</button>
+            <button onclick="clearResults()" class="secondary-btn">🧹 Clear Results</button>
+        </div>
+        
+        <div id="test-summary" class="test-summary" style="display: none;">
+            <!-- Test summary will be populated here -->
+        </div>
+        
+        <div class="step-section">
+            <h2>📊 Test Results</h2>
+            <div id="test-results">
+                <p>Click "Run All Tests" to check that everything works properly.</p>
+            </div>
+        </div>
+        
+        <div class="step-section">
+            <h2>🧠 What We Test</h2>
+            <div class="step-box">
+                <h4>🤖 AI Behavior</h4>
+                <p>Check that both SimpleAI and PatternAI make valid moves and learn correctly</p>
+            </div>
+            
+            <div class="step-box">
+                <h4>🎮 Game Logic</h4>
+                <p>Verify Rock-Paper-Scissors rules work and scores are calculated properly</p>
+            </div>
+            
+            <div class="step-box">
+                <h4>🔗 Integration</h4>
+                <p>Make sure all components work together smoothly in real gameplay</p>
+            </div>
+            
+            <div class="step-box">
+                <h4>🧮 ELPH Math</h4>
+                <p>Verify entropy calculations, hypothesis generation, and soft-max selection accuracy</p>
+            </div>
+            
+            <div class="step-box">
+                <h4>⚡ ELPH Performance</h4>
+                <p>Stress test STM scaling and ensure response times stay under 2000ms limit</p>
+            </div>
+            
+            <div class="step-box">
+                <h4>🎯 ELPH Behavioral</h4>
+                <p>Test parameter interactions, edge cases, and realistic gameplay scenarios</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load the components being tested -->
+    <script src="../random-ai.js"></script>
+    <script src="../counter-ai.js"></script>
+    <script src="../biased-random-ai.js"></script>
+    <script src="../frequency-counter-ai.js"></script>
+    <script src="../elph-ai.js"></script>
+    <script src="../step6-experiment.js"></script>
+    
+    <!-- Load the test framework and tests -->
+    <script src="test-framework.js"></script>
+    <script src="simple-ai.test.js"></script>
+    <script src="pattern-ai.test.js"></script>
+    <script src="game-logic.test.js"></script>
+    <script src="integration.test.js"></script>
+    <script src="elph-math.test.js"></script>
+    <script src="elph-performance.test.js"></script>
+    <script src="elph-behavioral.test.js"></script>
+    
+    <script>
+        // Test runner coordination
+        let allTestResults = [];
+        
+        function runAllTests() {
+            clearResults();
+            allTestResults = [];
+            
+            console.log('🧪 Starting test suite...');
+            
+            // Run all test suites
+            const simpleAIResults = TestFramework.runTestSuite('🤖 SimpleAI Tests', SimpleAITests);
+            const patternAIResults = TestFramework.runTestSuite('🧠 PatternAI Tests', PatternAITests);
+            const gameLogicResults = TestFramework.runTestSuite('🎮 Game Logic Tests', GameLogicTests);
+            const integrationResults = TestFramework.runTestSuite('🔗 Integration Tests', IntegrationTests);
+            const elphMathResults = TestFramework.runTestSuite('🧮 ELPH Math Tests', ELPHMathTests);
+            const elphPerfResults = TestFramework.runTestSuite('⚡ ELPH Performance Tests', ELPHPerformanceTests);
+            const elphBehavResults = TestFramework.runTestSuite('🎯 ELPH Behavioral Tests', ELPHBehavioralTests);
+            
+            allTestResults.push(...simpleAIResults, ...patternAIResults, ...gameLogicResults, ...integrationResults, ...elphMathResults, ...elphPerfResults, ...elphBehavResults);
+            
+            showFinalSummary();
+        }
+        
+        function showFinalSummary() {
+            const totalTests = allTestResults.length;
+            const passedTests = allTestResults.filter(r => r.passed).length;
+            const failedTests = totalTests - passedTests;
+            
+            const summaryEl = document.getElementById('test-summary');
+            const allPassed = failedTests === 0;
+            
+            summaryEl.className = `test-summary ${allPassed ? 'all-pass' : 'has-failures'}`;
+            summaryEl.innerHTML = `
+                📊 Test Summary: ${passedTests}/${totalTests} tests passed
+                ${failedTests > 0 ? `<br>❌ ${failedTests} test(s) failed` : '<br>✅ All tests passed!'}
+            `;
+            summaryEl.style.display = 'block';
+            
+            console.log(`🏁 Test suite complete: ${passedTests}/${totalTests} passed`);
+        }
+        
+        function clearResults() {
+            document.getElementById('test-results').innerHTML = '<p>Test results cleared. Click a test button to run tests.</p>';
+            document.getElementById('test-summary').style.display = 'none';
+            allTestResults = [];
+        }
+    </script>
+</body>
+</html> 

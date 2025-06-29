@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 5 Advanced Guide: From UI to localStorage</title>
+    <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚙️ Step 5 Advanced Guide: From UI to <code>localStorage</code></h1>
+            <p><strong>Goal:</strong> Learn how to use a user interface to build a complex configuration object and save it with <strong>localStorage</strong>.</p>
+            <a href="index.html" class="nav-btn secondary">← Back to Step 5</a>
+        </div>
+
+        <div class="info-section">
+            <h3>From Collecting Data to Managing Settings</h3>
+            <p>In Step 4, you learned how to use <code>localStorage</code> to <strong>collect data</strong> every time a participant made a choice. We saved a list of simple data "packets" representing each trial.</p>
+            <p>In this step, we'll take it to the next level. Instead of saving a list of actions, we will save a single, complex <strong>configuration object</strong>. This object acts like a "recipe card" that tells our experiment in Step 6 exactly how to run, including which AI to use, how many trials to run, and how the AI should behave.</p>
+        </div>
+
+        <div class="step-section">
+            <h3>🛠️ From UI to <code>localStorage</code>: A Step-by-Step Breakdown</h3>
+            
+            <div class="step-box">
+                <h4>Step 1: The Goal - A Single Configuration Object</h4>
+                <p>The entire goal of the interactive form in Step 5 is to generate and save one single, well-structured JSON object. This object contains every setting the next part of our experiment needs. Here is an example of what it looks like for the ELPH algorithm:</p>
+                <div class="code-block">
+<code>{
+  "numTrials": 100,
+  "feedbackDelay": 1500,
+  "showProgress": true,
+  "showAIStrategy": true,
+  "askParticipantInfo": true,
+  "aiAlgorithm": "elph",
+  "stmLength": 3,
+  "entropyThreshold": 1.5,
+  "minObservations": 3,
+  "hypothesisPruning": true
+}</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>Step 2: Define a Default Configuration</h4>
+                <p>To start, our code defines a default <code>rpsConfig</code> object in <code>step5-experiment.js</code>. This ensures that the experiment has a valid configuration to work with, even if nothing has been saved by the user yet. It includes parameters for <em>all</em> potential AI algorithms.</p>
+                <div class="code-block">
+<code>// A global object to hold our default settings
+let rpsConfig = {
+    numTrials: 100,
+    feedbackDelay: 1500,
+    showProgress: true,
+    aiAlgorithm: '',
+    // ELPH parameters
+    stmLength: 3,
+    entropyThreshold: 1.5,
+    minObservations: 3,
+    hypothesisPruning: true,
+    // Biased Random AI parameters
+    phase1End: 200,
+    phase2End: 400
+};</code>
+                </div>
+            </div>
+            
+            <div class="step-box">
+                <h4>Step 3: Load Saved Settings on Page Load</h4>
+                <p>Just like in Step 4, we check <code>localStorage</code> as soon as the page loads. The <code>loadSavedRPSConfig</code> function looks for an item with the key <code>'rps_config'</code>. If it finds one, it parses the saved string back into a JavaScript object and uses it to populate the form.</p>
+                <div class="code-block">
+<code>function loadSavedRPSConfig() {
+    // Look for our specific config in the browser's storage
+    const savedConfigJSON = localStorage.getItem('rps_config');
+    
+    // If we found a saved configuration...
+    if (savedConfigJSON) {
+        console.log('✅ Found a saved RPS configuration, loading it.');
+        // ...convert it from a text string back into a usable JavaScript object
+        const savedConfig = JSON.parse(savedConfigJSON);
+        
+        // Use the saved data to fill out the form fields
+        updateFormFromConfig(savedConfig);
+    } else {
+        console.log('📝 No saved configuration found, using defaults.');
+    }
+}</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>Step 4: Save User Changes from the Form</h4>
+                <p>When you click the "Save to Local Storage" button, the <code>applyRPSConfiguration</code> function runs. It reads the current values from every input field on the form, builds a new configuration object, and then saves it to <code>localStorage</code>, overwriting any previous version.</p>
+                <div class="code-block">
+<code>function applyRPSConfiguration() {
+    // 1. Read all the current values from the form into an object
+    // (This part is done by another function, updateRPSPreview, which
+    // gathers all `document.getElementById(...)` values)
+    const currentConfig = buildConfigFromForm(); // Simplified for clarity
+
+    try {
+        // 2. Convert the configuration object into a JSON string
+        const configJSON = JSON.stringify(currentConfig, null, 2);
+        
+        // 3. Save the string to localStorage with our specific key
+        localStorage.setItem('rps_config', configJSON);
+        
+        console.log('✅ Configuration saved successfully to localStorage.');
+        showStatus('Configuration saved!', 'success');
+
+    } catch (error) {
+        console.error('❌ Failed to save configuration:', error);
+        showStatus('Error saving configuration.', 'error');
+    }
+}</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section callout">
+            <h3>Beyond the Demo: The <code>config.json</code> File</h3>
+            <p>The interactive form is a powerful tool for quickly testing settings, but for professional research, a static <code>config.json</code> file is the standard. A file is reliable, easy to share with collaborators, and can be tracked with version control (like Git).</p>
+            <p><strong>Think of the Step 5 form as a user-friendly "Configuration Generator."</strong></p>
+            <p>The <strong>"Download JSON Config"</strong> button is the bridge between the interactive demo and a real project. It takes the exact same configuration object that gets saved to <code>localStorage</code> and lets you download it as a portable <code>.json</code> file. You can then bundle this file with your experiment code to ensure it always runs with the exact same settings.</p>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html" class="nav-btn secondary">← Back to Step 5</a>
+            <a href="../option-a-step6/index.html" class="nav-btn">Continue to Step 6 →</a>
+        </div>
+
+        <div class="footer">
+            <p>Step 5 Advanced Guide</p>
+        </div>
+    </div>
+    <script src="../../shared/code-copy-utils.js"></script>
+</body>
+</html> 

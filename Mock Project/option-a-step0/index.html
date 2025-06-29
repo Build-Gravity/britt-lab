@@ -28,12 +28,17 @@
             <h3>⭐ Our Example: A Rock-Paper-Scissors Study</h3>
             <p>To demonstrate the process, we chose the following study as our inspiration. Throughout this tutorial, we will build a web-based version of this experiment, and you will adapt each step to build your own.</p>
             <div class="reference-box">
+                <br>
                 <p><strong>Study Reference:</strong><br>
                 Mohammadi Sepahvand, N., Stöttinger, E., Danckert, J., & Anderson, B. (2014). Sequential decisions: A computational comparison of observational and reinforcement accounts. <em>PLoS ONE, 9</em>(4), e94308.</p>
-                <p><strong>Research Question:</strong><br>
+                
+                <p style="margin-top: 25px;"><strong>Research Question:</strong><br>
                 How do humans build and update mental models to make sequential decisions under uncertainty? Specifically, when playing against an opponent whose strategy changes over time, do people use statistical learning (trying to predict what the opponent will do next) or reinforcement learning (learning which actions tend to lead to wins)? The study tested this by having participants play Rock-Paper-Scissors against a computer that shifted from random play to increasingly biased strategies, then used computational modeling to determine which learning approach best explained human behavior.</p>
-                <p><strong>Our Adaptation:</strong><br>
-                Build a web-based Rock-Paper-Scissors game where participants play 30-50 rounds against multiple AI opponents with different learning strategies. We implement the original study's biased algorithms (random play, lightly biased toward rock at 50%, heavily biased toward paper at 80%) plus additional research-validated AI algorithms including RELPH (reinforcement learning) and ELPH (statistical learning) from the original paper. We track participant choices, reaction times, win rates, learning curves, and strategy adaptation patterns. The experiment measures whether participants detect different AI strategy types and adapt their play accordingly, while collecting rich behavioral data including choice entropy, pattern recognition, and individual differences in learning rates suitable for computational modeling and statistical analysis.</p>
+                
+                <p style="margin-top: 25px;"><strong>Our Adaptation:</strong><br>
+                Build a web-based Rock-Paper-Scissors game where participants play against AI opponents with different strategic approaches. We implement the original study's biased algorithms (random play, lightly biased toward rock at 50%, heavily biased toward paper at 80%) plus engaging AI opponents including pattern matchers, frequency counters, and adaptive learners. We track participant choices, reaction times, win rates, learning curves, and strategy adaptation patterns. The experiment measures whether participants detect different AI strategy types and adapt their play accordingly, while collecting rich behavioral data suitable for post-hoc analysis using the original study's computational models (RELPH and ELPH) to understand individual differences in learning strategies.</p>
+                
+                <p style="margin-top: 25px;"><a href="study-methodology.html" class="nav-btn secondary methodology-link">📚 Learn More About the Original Study's Methodology →</a></p>
             </div>
         </div>
 
@@ -56,10 +61,10 @@
                 <p>Use this prompt with Claude, ChatGPT, or Gemini:</p>
                 <div class="formatted-prompt">
                     <div class="prompt-header">
-                        <span class="prompt-title">AI Research Prompt</span>
-                        <button onclick="copyResearchPrompt()" class="prompt-copy-btn">📋 Copy Prompt</button>
+                        <span class="prompt-title">AI Prompt: Research Experiments</span>
+                        <button class="prompt-copy-btn" onclick="copyPrompt('research-prompt')" title="Copy prompt text">Copy</button>
                     </div>
-                    <div class="prompt-content">
+                    <div class="prompt-content" id="research-prompt">
                         <p><strong>I want to find interesting psychology experiments that could inspire a digital study.</strong></p>
                         
                         <p><strong>Please suggest 5 psychology experiments that:</strong></p>
@@ -157,7 +162,7 @@
                 <button id="save-study-btn" class="primary-btn">💾 Save & Download Reference</button>
                 <div id="form-status" class="status-message" style="display: none;"></div>
                 
-                <div id="post-save-suggestions" class="step-box" style="display: none; margin-top: 20px; background-color: #f8f9fa; border-left: 4px solid #28a745;">
+                <div id="post-save-suggestions" class="step-box post-save-suggestions" style="display: none;">
                     <h4>🤖 Next: Improve Your Study Reference</h4>
                     <p>Now that you've saved your initial study reference, consider using an LLM (such as through Cursor) to collaboratively improve and expand your document. You can:</p>
                     <ul>
@@ -209,6 +214,7 @@
     </div>
     
     <script src="../../shared/progress-component.js"></script>
+    <script src="../../shared/code-copy-utils.js"></script>
     <script src="step0-planning.js"></script>
 </body>
 </html> 

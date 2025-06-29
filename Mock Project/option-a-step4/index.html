@@ -55,6 +55,7 @@
                     <li><strong>Persistent:</strong> Data is saved until the user manually clears their browser data.</li>
                     <li><strong>Private:</strong> Data is stored only on the user's computer.</li>
                 </ul>
+                <p>Want to learn exactly how this demo saves data? <a href="localStorage-guide.html" target="_blank">Check out our detailed guide on this example's code →</a></p>
             </div>
             
             <div class="step-box">
@@ -71,9 +72,12 @@
             <h4>🔧 Build Your Own Local Data Experiment</h4>
             <div class="step-box">
                 <h4>Code Example: Saving to localStorage</h4>
-                <p>Saving data is a two-step process: add to your array, then save the whole array.</p>
+                <p>Saving data is a two-step process: declare your array, add to it, then save the whole array.</p>
                 <div class="code-block">
-                    <code>
+                    <code class="language-javascript">
+// Declare your experiment data array at the top of your script
+let experimentData = [];
+
 // Add new trial data to our array
 experimentData.push(trialData);
 
@@ -84,30 +88,95 @@ localStorage.setItem('myExperimentData', JSON.stringify(experimentData));
             </div>
             
             <div class="step-box">
-                <h4>🤖 Cursor Prompt for Local Data:</h4>
+                <h4>Code Example: Downloading Data as a File</h4>
+                <p>To create a download button, you write a function that converts your data array into a file that the browser can download.</p>
                 <div class="code-block">
-                    <code>I want to add local data collection to my experiment using localStorage.
-
-I need help with:
-1. A 'logChoice' function that saves data to localStorage.
-2. A function to load existing data from localStorage when the page opens.
-3. Download functions for both JSON and CSV formats.
-4. A button to clear the data from localStorage.
-
-The goal is to collect data that persists between page loads, all locally in the browser.</code>
+                    <code class="language-javascript">
+function downloadJSON() {
+    // Convert the array of data into a text format
+    const dataStr = JSON.stringify(experimentData, null, 2);
+    
+    // Create a file-like object in the browser
+    const dataBlob = new Blob([dataStr], {type: "application/json"});
+    
+    // Create a temporary, invisible link to trigger the download
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = "experiment-data.json"; // The filename
+    link.click(); // Click the link programmatically
+}
+                    </code>
                 </div>
-                <button onclick="copyStep4Prompt()" class="primary-btn">📋 Copy Adaptation Prompt</button>
+                <p>The process is similar for a CSV file, but you have to manually create the headers and rows.</p>
+                <div class="code-block">
+                    <code class="language-javascript">
+function downloadCSV() {
+    // Define the column headers for your file
+    const headers = "trial,timestamp,playerChoice,step,status";
+    
+    // Convert each data object into a single, comma-separated line
+    const rows = experimentData.map(d => 
+        `${d.trial},${d.timestamp},${d.playerChoice},${d.step},${d.status}`
+    );
+    
+    // Join the headers and all the rows into one big string
+    const csvContent = [headers, ...rows].join("\n");
+    
+    // The rest is the same as the JSON download!
+    const dataBlob = new Blob([csvContent], {type: "text/csv"});
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = "experiment-data.csv";
+    link.click();
+}
+                    </code>
+                </div>
+            </div>
+            
+            <div class="step-box">
+                <h4>🤖 AI Prompt: Add Local Data Collection</h4>
+                <p>Use this prompt to add <code>localStorage</code> functionality to your own experiment from Step 3. Be sure to include your existing <code>experiment.js</code> file as context.</p>
+                <div class="formatted-prompt">
+                    <div class="prompt-header">
+                        <span class="prompt-title">AI Prompt: Implement Local Storage</span>
+                        <button class="prompt-copy-btn" onclick="copyPrompt('local-storage-prompt')" title="Copy prompt text">Copy</button>
+                    </div>
+                    <div class="prompt-content" id="local-storage-prompt">
+                        <p>I want to add local data collection to my experiment using localStorage.</p>
+                        <p>I need help with:</p>
+                        <ol>
+                            <li>A 'logChoice' function that saves data to localStorage.</li>
+                            <li>A function to load existing data from localStorage when the page opens.</li>
+                            <li>Download functions for both JSON and CSV formats.</li>
+                            <li>A button to clear the data from localStorage.</li>
+                        </ol>
+                        <p>The goal is to collect data that persists between page loads, all locally in the browser.</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="info-section">
-            <h4>✅ Step 4 Checklist & Troubleshooting</h4>
-             <ul>
-                <li><strong>Data Persists:</strong> After clicking a choice, refresh the page. The data should still be there.</li>
-                <li><strong>Downloads Work:</strong> JSON and CSV downloads should contain all collected data.</li>
-                <li><strong>Data Clears:</strong> Clicking "Clear Data" should reset the experiment.</li>
-                <li><strong>Troubleshooting:</strong> Data not saving? Check the browser console for errors related to `localStorage` or `JSON.stringify`.</li>
-            </ul>
+        <div class="step-section">
+            <h3>✅ Step 4 Checklist & Troubleshooting</h3>
+            
+            <div class="step-box checklist">
+                <h4>Verification Checklist</h4>
+                <label><input type="checkbox" disabled> Data persists after refreshing the page.</label>
+                <label><input type="checkbox" disabled> JSON and CSV downloads contain all collected data.</label>
+                <label><input type="checkbox" disabled> "Clear Data" button works and resets the experiment.</label>
+            </div>
+            
+            <div class="step-box troubleshooting-section">
+                <h4>Common Issues & Solutions</h4>
+                <ul>
+                    <li><strong>Data not saving?</strong> Check the browser console for errors related to <code>localStorage</code> or <code>JSON.stringify</code>.</li>
+                    <li><strong>Downloads not working?</strong> Make sure you have data to download—click some choices first.</li>
+                    <li><strong>Clear Data has no effect?</strong> Check that you're not in private/incognito browsing mode.</li>
+                    <li><strong>Data disappeared?</strong> Browser data might have been cleared manually, or you might have switched browsers.</li>
+                </ul>
+            </div>
         </div>
 
         <div class="navigation">
@@ -121,6 +190,7 @@ The goal is to collect data that persists between page loads, all locally in the
     </div>
     
     <script src="../../shared/progress-component.js"></script>
+    <script src="../../shared/code-copy-utils.js"></script>
     <script src="step4-experiment.js"></script>
 </body>
 </html> 

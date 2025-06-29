@@ -1,0 +1,13 @@
+{
+  "name": "step6-tests",
+  "version": "1.0.0",
+  "description": "Terminal test runner for Step 6 AI experiment tests",
+  "main": "Tests/test-runner.js",
+  "scripts": {
+    "test": "node Tests/test-runner.js",
+    "test:verbose": "node Tests/test-runner.js --verbose"
+  },
+  "keywords": ["psychology", "experiment", "ai", "testing", "rock-paper-scissors"],
+  "author": "Psychology Experiment Course",
+  "license": "MIT"
+} 

@@ -1,7 +1,7 @@
 // Data Analysis Module for Step 7: RELPH Analysis
 // Processes RPS game data and performs analyses from Anderson et al. (2014)
 
-let allGameData = [];
+let allTrials = [];
 let relphModel = null;
 let analysisResults = {};
 
@@ -42,16 +42,16 @@ async function loadAndProcessFiles() {
     }
 
     updateDataStatus(`Loading ${files.length} file(s)...`);
-    allGameData = [];
+    allTrials = [];
     let totalTrials = 0;
 
     for (const file of files) {
         try {
             const content = await file.text();
             const data = JSON.parse(content);
-            if (data.gameHistory && Array.isArray(data.gameHistory)) {
-                allGameData.push(...data.gameHistory);
-                totalTrials += data.gameHistory.length;
+            if (data.trialData && Array.isArray(data.trialData)) {
+                allTrials.push(...data.trialData);
+                totalTrials += data.trialData.length;
             }
         } catch (error) {
             console.error('Error reading or parsing file:', file.name, error);
@@ -60,10 +60,10 @@ async function loadAndProcessFiles() {
         }
     }
 
-    if (allGameData.length > 0) {
+    if (allTrials.length > 0) {
         updateDataStatus(`✅ Loaded ${files.length} file(s) with a total of ${totalTrials} trials.`);
         document.getElementById('run-analysis-btn').disabled = false;
-        processGameData(allGameData);
+        processGameData(allTrials);
     } else {
         updateDataStatus('No valid game data found in the selected files.');
         document.getElementById('run-analysis-btn').disabled = true;
@@ -72,7 +72,7 @@ async function loadAndProcessFiles() {
 
 // Process loaded game data
 function processGameData(data) {
-    // Add phase information to the data
+    // Add phase information and standardized outcome to the data
     const trialsPerPhase = Math.floor(data.length / 3);
     data.forEach((trial, index) => {
         if (index < trialsPerPhase) {
@@ -82,7 +82,7 @@ function processGameData(data) {
         } else {
             trial.phase = 3;
         }
-        trial.outcome = determineOutcome(trial.playerChoice, trial.aiChoice);
+        trial.outcome = mapResultToOutcome(trial.result);
     });
 
     // Calculate basic statistics
@@ -210,7 +210,7 @@ function createPhaseTable(phaseStats) {
 }
 
 function runAnalysis() {
-    if (!allGameData || allGameData.length === 0) {
+    if (!allTrials || allTrials.length === 0) {
         updateDataStatus('No data available to analyze.');
         return;
     }
@@ -226,7 +226,7 @@ function runAnalysis() {
     });
 
     // Extract opponent choices for the simulation
-    const opponentSequence = allGameData.map(trial => trial.aiChoice);
+    const opponentSequence = allTrials.map(trial => trial.aiChoice);
 
     // Simulate the model over the game data
     const simulationResults = relphModel.simulate(opponentSequence);
@@ -239,7 +239,7 @@ function runAnalysis() {
     displayModelResults(analysisResults.fit);
     
     // Update visualizations
-    updateVisualization(allGameData, simulationResults);
+    updateVisualization(allTrials, simulationResults);
 
     updateDataStatus('✅ RELPH analysis complete. Results are shown below.');
     showResultsSection();
@@ -254,7 +254,7 @@ function calculateModelFit(simulationResults) {
     let logLikelihood = 0;
     
     simulationResults.forEach((result, index) => {
-        const humanChoice = allGameData[index].playerChoice;
+        const humanChoice = allTrials[index].playerChoice;
         const modelChoice = result.modelChoice;
         
         if (humanChoice === modelChoice) {
@@ -395,27 +395,15 @@ function createSimplePlot(data, simulationResults) {
 
 // Update data status
 function updateDataStatus(message) {
-    const statusElement = document.getElementById('dataStatus');
-    if (statusElement) {
-        statusElement.textContent = message;
-    }
-    console.log('📊 Status:', message);
+    const statusEl = document.getElementById('analysis-status');
+    if(statusEl) statusEl.textContent = message;
 }
 
-function determineOutcome(playerChoice, opponentChoice) {
-    if (playerChoice === opponentChoice) return 'tie';
-    
-    const playerWins = (
-        (playerChoice === 'Rock' && opponentChoice === 'Scissors') ||
-        (playerChoice === 'Paper' && opponentChoice === 'Rock') ||
-        (playerChoice === 'Scissors' && opponentChoice === 'Paper')
-    );
-    
-    return playerWins ? 'win' : 'loss';
+function mapResultToOutcome(result) {
+    if (result === 'player_wins') return 'win';
+    if (result === 'ai_wins') return 'loss';
+    return 'tie';
 }
 
-// Utility functions for browser compatibility
-if (typeof window !== 'undefined') {
-    window.initializeAnalysis = initializeAnalysis;
-    window.runAnalysis = runAnalysis;
-} 
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', initializeAnalysis); 

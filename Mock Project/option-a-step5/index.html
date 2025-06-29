@@ -38,117 +38,369 @@
                 <div class="config-form-container">
                     <h4>RPS Example Configuration</h4>
                     <form id="rps-config-form">
-                        <div class="form-group">
-                            <label for="num-trials">Number of Trials (5-50):</label>
-                            <input type="range" id="num-trials" name="numTrials" min="5" max="50" value="30">
-                            <span id="num-trials-value">30</span>
+                        <!-- General experiment settings -->
+                        <div class="parameter-control">
+                            <label for="num-trials" title="The total number of rounds your participant will play. 10-50 for quick tests, 100-300 for standard experiments, 500+ for in-depth studies.">
+                                Number of Trials (5-1000):
+                                <span class="tooltip-icon">?</span>
+                            </label>
+                            <div class="control-group">
+                                <input type="range" id="num-trials" name="numTrials" min="5" max="1000" value="100">
+                                <input type="number" id="num-trials-number" name="numTrialsNumber" min="5" max="1000" value="100">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="feedback-delay">Feedback Duration (ms):</label>
-                            <input type="range" id="feedback-delay" name="feedbackDelay" min="500" max="3000" step="100" value="1500">
-                            <span id="feedback-delay-value">1500ms</span>
+                        
+                        <div class="parameter-control">
+                            <label for="feedback-delay" title="How long to show the result after each round. Longer = more time to process, but experiment takes longer overall.">
+                                Feedback Duration (500-3000ms):
+                                <span class="tooltip-icon">?</span>
+                            </label>
+                            <div class="control-group">
+                                <input type="range" id="feedback-delay" name="feedbackDelay" min="500" max="3000" step="100" value="1500">
+                                <input type="number" id="feedback-delay-number" name="feedbackDelayNumber" min="500" max="3000" step="100" value="1500">
+                            </div>
                         </div>
-                         <div class="form-group">
-                            <label for="ai-algorithm">AI Algorithm:</label>
-                            <select id="ai-algorithm" name="aiAlgorithm">
-                                <option value="relph">RELPH (Reinforcement Learning)</option>
-                                <option value="elph">ELPH (Statistical Learning)</option>
-                                <option value="random">Random (Control)</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="learning-rate">AI Learning Rate:</label>
-                            <select id="learning-rate" name="learningRate">
-                                <option value="slow">Slow (α=0.1)</option>
-                                <option value="moderate" selected>Moderate (α=0.3)</option>
-                                <option value="fast">Fast (α=0.7)</option>
-                            </select>
-                        </div>
+                        
                         <div class="form-group checkbox-group">
                             <input type="checkbox" id="show-progress" name="showProgress" checked>
-                            <label for="show-progress">Show Progress Bar</label>
+                            <label for="show-progress" title="Whether to show participants how many rounds they've completed. Can be motivating but might change behavior.">
+                                Show Progress Bar
+                                <span class="tooltip-icon">?</span>
+                            </label>
                         </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="show-ai-strategy" name="showAIStrategy" checked>
+                            <label for="show-ai-strategy" title="Whether to show participants the AI's reasoning after each round. Useful for educational purposes but may influence strategy.">
+                                Show AI Strategy/Reasoning
+                                <span class="tooltip-icon">?</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="ask-participant-info" name="askParticipantInfo" checked>
+                            <label for="ask-participant-info" title="Ask for participant's name (required) and age (optional) before starting the experiment.">
+                                Ask for Participant Information
+                                <span class="tooltip-icon">?</span>
+                            </label>
+                        </div>
+
+                        <!-- Algorithm selection -->
+                        <div class="form-group">
+                            <label for="ai-algorithm">
+                                AI Algorithm - Pick an algorithm to see more details:
+                            </label>
+                            <select id="ai-algorithm" name="aiAlgorithm">
+                                <option value="" selected>Pick an Algorithm</option>
+                                <option value="random">Random (Baseline)</option>
+                                <option value="counter">Counter (Beats Last Move)</option>
+                                <option value="frequency_counter">Frequency Counter</option>
+                                <option value="biased_random">Biased Random (Original Study)</option>
+                                <option value="elph">ELPH Algorithm (Pattern Learning)</option>
+                            </select>
+                        </div>
+
+                        <!-- Algorithm explanation box -->
+                        <div id="algorithm-explanation" class="algorithm-explanation-box" style="display: none;">
+                            <div class="explanation-content" id="explanation-content">
+                                <!-- Content will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Algorithm-specific settings (hidden by default) -->
+                        <div id="ai-settings-container" class="ai-settings-container" style="display: none;">
+                            <div class="ai-settings-box">
+                                <h5>Algorithm-Specific Settings</h5>
+                                <div id="pattern-settings" class="algorithm-settings" style="display: none;">
+                                    
+                                    <div class="form-group">
+                                        <label for="stm-length" title="Short Term Memory length - how many previous moves to remember for pattern detection. Higher = more complex patterns but needs more data.">
+                                            STM Length (Pattern Memory):
+                                            <span class="tooltip-icon">?</span>
+                                        </label>
+                                        <select id="stm-length" name="stmLength">
+                                            <option value="1">1 move (simplest)</option>
+                                            <option value="2">2 moves</option>
+                                            <option value="3" selected>3 moves (standard)</option>
+                                            <option value="4">4 moves</option>
+                                            <option value="5">5 moves (complex)</option>
+                                            <option value="6">6 moves</option>
+                                            <option value="7">7 moves</option>
+                                            <option value="8">8 moves (max)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="parameter-control">
+                                        <label for="entropy-threshold-number" title="Maximum entropy (randomness) allowed in patterns. Lower = only trust very predictable patterns. Higher = willing to use somewhat random patterns.">
+                                            Entropy Threshold (0.5-2.0):
+                                            <span class="tooltip-icon">?</span>
+                                        </label>
+                                        <div class="control-group">
+                                            <input type="number" id="entropy-threshold-number" name="entropyThreshold" min="0.5" max="2.0" step="0.05" value="1.5">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="parameter-control">
+                                        <label for="min-observations-number" title="Minimum number of times a pattern must be seen before trusting it. Higher = more conservative, waits for solid evidence.">
+                                            Min Observations (2-10):
+                                            <span class="tooltip-icon">?</span>
+                                        </label>
+                                        <div class="control-group">
+                                            <input type="number" id="min-observations-number" name="minObservations" min="2" max="10" step="1" value="3">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group checkbox-group">
+                                        <input type="checkbox" id="hypothesis-pruning" name="hypothesisPruning" checked>
+                                        <label for="hypothesis-pruning" title="Remove unreliable patterns from memory to focus on predictable ones. Recommended: ON for most cases.">
+                                            Hypothesis Pruning (Remove Bad Patterns)
+                                            <span class="tooltip-icon">?</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div id="frequency-settings" class="algorithm-settings" style="display: none;">
+                                    <p>This algorithm counts how often the player chooses Rock, Paper, or Scissors and then picks the move that would beat the player's most frequent choice.</p>
+                                </div>
+                                
+                                <div id="biased-settings" class="algorithm-settings" style="display: none;">
+                                    <div class="form-group">
+                                        <label for="phase1-end-number" title="When to switch from random to light bias. Must be less than Phase 2 End.">
+                                            Phase 1 End (Random → Light Bias):
+                                            <span class="tooltip-icon">?</span>
+                                        </label>
+                                        <input type="number" id="phase1-end-number" name="phase1End" min="1" value="200" class="phase-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phase2-end-number" title="When to switch from light bias to heavy bias. Must be less than total trials and greater than Phase 1 End.">
+                                            Phase 2 End (Light → Heavy Bias):
+                                            <span class="tooltip-icon">?</span>
+                                        </label>
+                                        <input type="number" id="phase2-end-number" name="phase2End" min="2" value="400" class="phase-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Biased Random Phases (Original Study):</label>
+                                        <div style="font-size: 0.9em; margin-top: 5px;">
+                                            <p>• <strong>Phase 1:</strong> 33% each move (random)</p>
+                                            <p>• <strong>Phase 2:</strong> 50% Rock, 25% Paper, 25% Scissors</p>
+                                            <p>• <strong>Phase 3:</strong> 10% Rock, 80% Paper, 10% Scissors</p>
+                                            <p style="margin-top: 10px; font-style: italic;">Replicates Mohammadi Sepahvand et al. (2014). Adjust phase boundaries above to test different timings.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="action-buttons">
-                            <button type="submit" class="primary-btn">Save Configuration</button>
+                            <button type="submit" class="primary-btn">Save to Local Storage</button>
+                            <button type="button" id="download-config-btn" class="secondary-btn">📥 Download JSON Config</button>
                         </div>
+                        <small class="form-note">"Save" applies settings to the Step 6 demo. "Download" gives you a file for your own project.</small>
                     </form>
                 </div>
-                <div class="config-preview-container">
-                    <h4>Live Preview & Info</h4>
-                    <p>Estimated time to complete: <strong id="estimated-time">~1 minute</strong></p>
-                    <p>Your configuration is saved in your browser's <code>localStorage</code>. Step 6 will automatically load these settings.</p>
-                    <div id="status-message" class="status-message" style="display: none;"></div>
+                <div id="status-message" class="status-message" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h3>📊 Live Preview & Configuration Info</h3>
+            
+            <div class="step-box">
+                <h4>⏱️ Experiment Duration</h4>
+                <p>With your current settings, this experiment will take approximately: <strong id="estimated-time">~1 minute</strong></p>
+                <p><em>This helps you plan reasonable experiment lengths for your participants.</em></p>
+            </div>
+            
+        </div>
+
+        <div class="step-section">
+            <h3>🏗️ Build Your Own Configuration File</h3>
+            <p>For your own research, a structured text file is the professional standard for managing experiment parameters. Below, we'll guide you through creating a <code>config.json</code> file for <strong>your</strong> experiment from Step 0.</p>
+            <p>A <strong>JSON (JavaScript Object Notation)</strong> file is a simple, human-readable format for storing structured data—think of it as a digital recipe card for your experiment.</p>
+            
+            <div class="step-box">
+                <h4>Part 1: Generate Your Base Configuration</h4>
+                <p>Use the following prompt with an AI assistant to create a starting <code>config.json</code> file. Make sure to provide the AI with the context of your research question and methodology from Step 0.</p>
+                <div class="formatted-prompt">
+                    <div class="prompt-header">
+                        <span class="prompt-title">AI Prompt: Create Experiment Config</span>
+                        <button class="prompt-copy-btn" onclick="copyPrompt('create-exp-config')" title="Copy prompt text">Copy</button>
+                    </div>
+                    <div class="prompt-content" id="create-exp-config">
+                        <p>Based on the research study I've provided from Step 0, create a `config.json` file for my experiment. The file should include parameters for:</p>
+                        <ul>
+                            <li><strong>Timing:</strong> Key durations like feedback display time.</li>
+                            <li><strong>Structure:</strong> The total number of trials.</li>
+                            <li><strong>Custom Parameters:</strong> Any other unique variables relevant to my study's design.</li>
+                        </ul>
+                        <p>Keep the JSON clean and well-structured.</p>
+                    </div>
+                </div>
+                <p style="margin-top: 15px;">After running the prompt, save the output into a new file named <code>config.json</code> in your project folder. We'll use this file in the next part.</p>
+            </div>
+
+            <div class="step-box">
+                <h4>Part 2: Use Your Configuration to Build the Experiment Logic</h4>
+                <p>Now, provide the AI with your newly created <code>config.json</code> file and ask it to write the core logic for your experiment.</p>
+                <div class="formatted-prompt">
+                     <div class="prompt-header">
+                        <span class="prompt-title">AI Prompt: Implement Experiment Logic</span>
+                        <button class="prompt-copy-btn" onclick="copyPrompt('implement-exp-logic')" title="Copy prompt text">Copy</button>
+                    </div>
+                    <div class="prompt-content" id="implement-exp-logic">
+                        <p>Using the provided `config.json`, write the JavaScript logic for my experiment. This should include:</p>
+                        <ul>
+                            <li>Loading and parsing the configuration file.</li>
+                            <li>Running a single trial of the experiment according to the parameters defined in the file.</li>
+                            <li>Logging the data for each trial.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>Example Configuration File</h4>
+                <p>Your generated file will look something like this, but tailored to your specific study. For a more detailed example, see the <a href="advanced-config-guide.html" target="_blank">RPS experiment's configuration</a>.</p>
+                <div class="code-block language-json" data-code-header="config.json">
+                    <div class="code-header">
+                        <span>config.json</span>
+                        <button class="copy-btn">Copy</button>
+                    </div>
+                    <div class="code-content">
+<pre><code>{
+  "experiment": {
+    "title": "My Reaction Time Study",
+    "version": "1.0"
+  },
+  "timing": {
+    "feedbackDuration": 1000
+  },
+  "structure": {
+    "experimentTrials": 50
+  }
+}
+</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔧 Using Your Configuration (moved from bottom) -->
+        <div class="step-section">
+            <h3>🔧 Using Your Configuration</h3>
+            <p>With a <code>config.json</code> file (or the RPS settings you saved to localStorage) in place, your experiment needs to <em>load</em> and <em>apply</em> those values at runtime. Here's a concise pattern you can adapt:</p>
+
+            <div class="step-box">
+                <h4>📄 Loading JSON Configuration</h4>
+                <div class="code-block">
+                    <code>// Load configuration at experiment startup
+async function loadConfig() {
+    try {
+        const response = await fetch('config.json');
+        const config = await response.json();
+
+        // Apply timing settings
+        experimentParams.trialDuration = config.timing.trialDuration;
+        experimentParams.interTrialInterval = config.timing.interTrialInterval;
+
+        // Apply structure settings
+        experimentParams.totalTrials = config.structure.experimentTrials;
+        experimentParams.practiceTrials = config.structure.practiceTrials;
+
+        console.log('Configuration loaded:', config);
+    } catch (error) {
+        console.error('Failed to load config, using defaults:', error);
+    }
+}</code>
+                </div>
+            </div>
+
+            <div class="step-box">
+                <h4>⚙️ Applying Configuration</h4>
+                <div class="code-block">
+                    <code>// Use configuration to control experiment flow
+function startTrial() {
+    // Use configured timing
+    setTimeout(() => {
+        hideStimulusAndCollectResponse();
+    }, config.timing.trialDuration);
+}
+
+function endTrial() {
+    // Use configured inter-trial interval
+    setTimeout(() => {
+        if (config.display?.showProgress) {
+            updateProgressBar();
+        }
+        startNextTrial();
+    }, config.timing.interTrialInterval);
+}</code>
                 </div>
             </div>
         </div>
 
         <div class="step-section">
-            <h3>🏗️ Build Your Own Configuration Interface</h3>
-            <p>Now, create a configuration file for <strong>your</strong> experiment from Step 0. While the RPS example uses a web form for interactive demonstration, a JSON file is a more robust and professional standard for your own research projects.</p>
-            
+            <h3>🔗 Putting Results Together for Analysis</h3>
+            <p>In Step 6, your experiment will generate a single JSON file for each participant, ready for analysis. This file should combine participant details, the session's configuration, and the trial-by-trial data.</p>
+            <p>Here is the recommended structure, which you will build toward in the next step. It has three top-level keys:</p>
+            <ul>
+                <li><code>participant</code> – The name and (optional) age the participant entered before starting the task.</li>
+                <li><code>configuration</code> – The full experiment configuration that was active for this session (from Step&nbsp;5).</li>
+                <li><code>trialData</code> – An array of records for each trial, produced by your experiment logic.</li>
+            </ul>
+
             <div class="step-box">
-                <h4>📝 Create Your Configuration File</h4>
-                <p>Based on your Step 0 study and AI design consultation, create <code>config.json</code> in your experiment folder:</p>
-                <div class="code-block">
-                    <code>{
-  "experiment": {
-    "title": "Your Study Title from Step 0",
-    "type": "reaction-time",
-    "version": "1.0"
+                <h4>🗂️ Example Results Package</h4>
+                <div class="code-block language-json" data-code-header="results_sample.json">
+<pre><code>{
+  "participant": {
+    "name": "Alice",
+    "age": 29
   },
-  "timing": {
-    "trialDuration": 3000,
-    "interTrialInterval": 1500,
-    "feedbackDuration": 1000,
-    "maxResponseTime": 5000
-  },
-  "structure": {
-    "practiceTrials": 10,
-    "experimentTrials": 120,
-    "blocks": 3,
-    "breakDuration": 30000
-  },
-  "display": {
+  "configuration": {
+    "numTrials": 30,
     "showProgress": true,
-    "showFeedback": true,
-    "showAccuracy": false
+    "aiAlgorithm": "counter"
   },
-  "conditions": {
-    "randomizeOrder": true,
-    "balanceConditions": true,
-    "adaptiveDifficulty": false
-  }
-}</code>
+  "trialData": [
+    { "round": 1, "playerChoice": "Rock",     "aiChoice": "Paper",    "outcome": "loss" },
+    { "round": 2, "playerChoice": "Paper",    "aiChoice": "Scissors", "outcome": "loss" }
+    // … additional trials …
+  ]
+}</code></pre>
                 </div>
-                <button onclick="copyConfigTemplate()" class="secondary-btn">📋 Copy JSON Template</button>
+                <p style="margin-top:8px; font-size:0.9em;">Your <code>trialData</code> objects can include any additional fields you log (e.g., reaction time, confidence ratings). Just make sure each trial is an object in this array.</p>
             </div>
 
             <div class="step-box">
-                <h4>⚙️ Adapt for Your Experiment Type</h4>
-                <p><strong>For your specific study:</strong></p>
-                <ol>
-                    <li><strong>Modify timing</strong>: Adjust based on your task requirements</li>
-                    <li><strong>Set trial counts</strong>: Balance statistical power vs. participant fatigue</li>
-                    <li><strong>Configure conditions</strong>: Match your experimental design</li>
-                    <li><strong>Test locally</strong>: Load and validate your JSON in Step 6</li>
-                </ol>
-            </div>
-
-            <div class="step-box">
-                <h4>🤖 Cursor Implementation Prompt</h4>
+                <h4>📄 Helper Snippet (JavaScript)</h4>
+                <p>In the next step, you will use a function like this to assemble and download the final results object:</p>
                 <div class="code-block">
-                    <code>I have a JSON configuration file for my psychology experiment. Help me write JavaScript to:
+<code>// Build the results package at the end of the experiment
+function buildResultsPackage(config, trials, participant) {
+    return {
+        participant,     // e.g., { name: 'Alice', age: 29 }
+        configuration: config,
+        trialData: trials
+    };
+}
 
-1. Load the JSON config file at experiment startup
-2. Apply timing parameters to control trial flow
-3. Use structure settings to manage blocks and breaks
-4. Implement display options (progress, feedback)
-5. Handle condition randomization and balancing
+// This function will be called from your "Download Results" button
+function exportResults() {
+    const participantInfo = { 
+        name: gameState.participantName, 
+        age: gameState.participantAge 
+    };
+    const resultsPackage = buildResultsPackage(gameConfig, gameState.trialData, participantInfo);
 
-My config structure is: [PASTE YOUR JSON]</code>
+    // Helper to trigger browser download
+    downloadJSON(resultsPackage, `results_${participantInfo.name || 'participant'}.json`);
+}
+</code>
                 </div>
-                <button onclick="copyImplementationPrompt()" class="primary-btn">📋 Copy Implementation Prompt</button>
             </div>
+
+            <p>With this structure defined, you are ready to build the interactive logic in Step 6 that will generate these files.</p>
         </div>
 
         <div class="step-section">
@@ -191,73 +443,22 @@ My config structure is: [PASTE YOUR JSON]</code>
                 <label><input type="checkbox" id="check-json-created"> <strong>Created JSON Config</strong> - Built a `config.json` file for your experiment</label>
                 <label><input type="checkbox" id="check-rps-config"> <strong>Explored RPS Config</strong> - Tested different settings in the demonstration</label>
                 <label><input type="checkbox" id="check-config-saved"> <strong>Saved RPS Config</strong> - Saved the settings for the next step</label>
-            </div>
-        </div>
-
-        <div class="step-section">
-            <h3>📚 How Configuration Works (Code Implementation)</h3>
-            <p>Understanding how experiments load and use configuration files:</p>
-            
-            <div class="step-box">
-                <h4>📄 Loading JSON Configuration</h4>
-                <div class="code-block">
-                    <code>// Load configuration at experiment startup
-async function loadConfig() {
-    try {
-        const response = await fetch('config.json');
-        const config = await response.json();
-        
-        // Apply timing settings
-        experimentParams.trialDuration = config.timing.trialDuration;
-        experimentParams.interTrialInterval = config.timing.interTrialInterval;
-        
-        // Apply structure settings
-        experimentParams.totalTrials = config.structure.experimentTrials;
-        experimentParams.practiceTrials = config.structure.practiceTrials;
-        
-        console.log('Configuration loaded:', config);
-    } catch (error) {
-        console.error('Failed to load config, using defaults:', error);
-    }
-}</code>
-                </div>
-            </div>
-            
-            <div class="step-box">
-                <h4>⚙️ Applying Configuration</h4>
-                <div class="code-block">
-                    <code>// Use configuration to control experiment flow
-function startTrial() {
-    // Use configured timing
-    setTimeout(() => {
-        hideStimulusAndCollectResponse();
-    }, config.timing.trialDuration);
-}
-
-function endTrial() {
-    // Use configured inter-trial interval
-    setTimeout(() => {
-        if (config.display.showProgress) {
-            updateProgressBar();
-        }
-        startNextTrial();
-    }, config.timing.interTrialInterval);
-}</code>
-                </div>
+                <label><input type="checkbox" id="check-config-console"> <strong>Verified Configuration</strong> - Confirmed in browser console that the configuration loaded correctly</label>
             </div>
         </div>
 
         <div class="navigation">
-            <a href="../option-a-step4/index.html" class="nav-btn secondary">← Step 4: Data Collection</a>
-            <a href="../option-a-step6/index.html" class="nav-btn primary">Next: Interactive Elements →</a>
+            <a href="../option-a-step4/index.html" class="nav-btn secondary">← Back to Step 4</a>
+            <a href="../option-a-step6/index.html" class="nav-btn primary">Continue to Step 6 →</a>
         </div>
 
         <div class="footer">
-            <p>Step 5 of 7 - Experimental Design Complete</p>
+            <p>Step 5: Experimental Design</p>
         </div>
     </div>
 
     <script src="../../shared/progress-component.js"></script>
+    <script src="../../shared/code-copy-utils.js"></script>
     <script src="step5-experiment.js"></script>
 </body>
 </html> 
